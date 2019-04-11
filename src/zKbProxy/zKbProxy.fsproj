@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Option.fs" />
+    <Compile Include="DateTime.fs" />
+    <Compile Include="DateTimeOffset.fs" />
+    <Compile Include="Seq.fs" />
+    <Compile Include="Strings.fs" />
+    <Compile Include="Collections.fs" />
+    <Compile Include="Console.fs" />
+    <Compile Include="Web.fs" />
+    <Compile Include="Configuration.fs" />
+    <Compile Include="MongoDb.fs" />
+    <Compile Include="Kills.fs" />
+    <Compile Include="Statistics.fs" />
+    <Compile Include="Actors.fs" />
+    <Compile Include="TimerActor.fs" />
+    <Compile Include="LoggingActor.fs" />
+    <Compile Include="StatisticsActor.fs" />
+    <Compile Include="KillImportActor.fs" />
+    <Compile Include="ZkbSourceActor.fs" />
+    <Compile Include="KillProviderActor.fs" />
+    <Compile Include="NoDbKillProviderActor.fs" />
+    <Compile Include="SessionProviderActor.fs" />
+    <Compile Include="ServiceFactory.fs" />
+    <Compile Include="WebServices.fs" />
+    <Compile Include="WebApp.fs" />
+    <Compile Include="CommandLine.fs" />
+    <Compile Include="Program.fs" />
+    <None Include="App.config" />
+    <Content Include="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>

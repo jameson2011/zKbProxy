@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "zKbProxy", "src\zKbProxy\zKbProxy.fsproj", "{511A0BFE-7369-4A4C-A847-BF4266557D06}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{511A0BFE-7369-4A4C-A847-BF4266557D06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{511A0BFE-7369-4A4C-A847-BF4266557D06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{511A0BFE-7369-4A4C-A847-BF4266557D06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{511A0BFE-7369-4A4C-A847-BF4266557D06}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A99EAF3-9154-41F4-BF3D-FD2A3A9DD83D}
+	EndGlobalSection
+EndGlobal

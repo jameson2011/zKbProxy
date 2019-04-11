@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "zKbProxy": {
+      "commandName": "Project",
+      "commandLineArgs": "run --server localhost -db zKbRedisqProxy -col zkbKills"
+    }
+  }
+}

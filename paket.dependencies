@@ -1,0 +1,5 @@
+source https://www.nuget.org/api/v2
+nuget log4net
+nuget Microsoft.Extensions.CommandLineUtils
+nuget MongoDB.Driver
+nuget suave
