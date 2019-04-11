@@ -1,4 +1,8 @@
 source https://www.nuget.org/api/v2
+nuget FAKE 5.3.0
+nuget Fake.Core.CommandLineParsing 5.3.0
+nuget Fake.Core.Target 5.3.0
+nuget Fake.IO.FileSystem 5.3.0
 nuget log4net
 nuget Microsoft.Extensions.CommandLineUtils
 nuget MongoDB.Driver

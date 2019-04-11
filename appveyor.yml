@@ -1,0 +1,25 @@
+version: 0.0.0.{build}
+
+# Build worker image (VM template)
+image: Visual Studio 2017
+
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+  
+# tasks
+before_build:
+- cmd: .paket\paket.exe restore
+
+build_script:
+- cmd: >-
+    ./build.bat
+
+test: off
+
+artifacts:
+- path: artifacts
+  name: zKbProxy
