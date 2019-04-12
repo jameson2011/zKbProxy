@@ -1,4 +1,4 @@
-﻿namespace ZkbRedisqProxy
+﻿namespace ZkbProxy
 
     open System
 
@@ -19,7 +19,7 @@
         open System.Net
         open System.Net.Http
 
-        let private userAgent = "zKbRedisqProxy (https://github.com/jameson2011/zKbRedisqProxy)"
+        let private userAgent = "zKbProxy (https://github.com/jameson2011/zKbProxy)"
 
         let httpClient()=
             let client = new System.Net.Http.HttpClient()

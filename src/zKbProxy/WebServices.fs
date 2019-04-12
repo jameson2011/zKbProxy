@@ -1,9 +1,9 @@
-﻿namespace ZkbRedisqProxy
+﻿namespace ZkbProxy
 
 open System
 open Suave
 open Suave.Operators
-open ZkbRedisqProxy.Strings    
+open ZkbProxy.Strings    
     
 module WebServices=
 

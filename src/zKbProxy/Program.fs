@@ -1,10 +1,10 @@
-﻿namespace ZkbRedisqProxy
+﻿namespace ZkbProxy
 
 open System
-open ZkbRedisqProxy
+open ZkbProxy
 open Suave
-open ZkbRedisqProxy.CommandLine
-open ZkbRedisqProxy.Strings
+open ZkbProxy.CommandLine
+open ZkbProxy.Strings
 
 module Program=
 

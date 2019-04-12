@@ -1,8 +1,8 @@
-﻿namespace ZkbRedisqProxy
+﻿namespace ZkbProxy
     open System
     open MongoDB.Bson
     open MongoDB.Driver
-    open ZkbRedisqProxy.Strings
+    open ZkbProxy.Strings
     
 
     module MongoDb=

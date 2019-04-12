@@ -1,4 +1,4 @@
-﻿namespace ZkbRedisqProxy
+﻿namespace ZkbProxy
 
     open System
 
@@ -8,7 +8,7 @@
         [<Literal>]
         let MongoServer = "127.0.0.1"
         [<Literal>]
-        let DbName = "zkbredisqproxy"
+        let DbName = "zkbproxy"
         [<Literal>]
         let ColName = "zkbkills"
         [<Literal>]

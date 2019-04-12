@@ -1,4 +1,4 @@
-﻿namespace ZkbRedisqProxy
+﻿namespace ZkbProxy
 
 type CappedQueue<'a>(size: int)=
         

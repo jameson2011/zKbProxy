@@ -1,4 +1,4 @@
-﻿namespace ZkbRedisqProxy
+﻿namespace ZkbProxy
 
 module CommandLine=        
         
@@ -79,7 +79,7 @@ module CommandLine=
 
     let createApp() =
         let app = new App(false)
-        app.Name <- "ZkbRedisqProxy"
+        app.Name <- "ZkbProxy"
         app.Description <- "A proxy for zKb's RedisQ service"
         app
     
