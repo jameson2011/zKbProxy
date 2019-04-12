@@ -249,7 +249,7 @@ paket-files/
 
 # FAKE - F# Make
 #.fake/
-#.fake/build.fsx
+.fake/build.fsx
 
 # JetBrains Rider
 .idea/
