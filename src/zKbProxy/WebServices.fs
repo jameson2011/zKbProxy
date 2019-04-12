@@ -41,7 +41,7 @@ module WebServices=
         async {
             
             let clientIp = ctx.clientIp false []
-            let msg = sprintf "Received [%s] from [%s] to [%s]" (ctx.request.method.ToString()) (clientIp.ToString()) ctx.request.path
+            let msg = sprintf "Received [%s] [%s] from [%s]" (ctx.request.method.ToString()) ctx.request.path (clientIp.ToString()) 
 
             msg |> Actors.messageSource "WebServices" |> ActorMessage.Info |> log
 
