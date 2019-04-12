@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>fake-cli</id>
+    <version>5.12.6</version>
+    <authors>Steffen Forkmann,Mauricio Scheffer,Colin Bull,Matthias Dittrich</authors>
+    <owners>Steffen Forkmann,Mauricio Scheffer,Colin Bull,Matthias Dittrich</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/fsharp/FAKE/blob/d86e9b5b8e7ebbb5a3d81c08d2e59518cf9d6da9/License.txt</licenseUrl>
+    <projectUrl>https://github.com/fsharp/Fake</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/fsharp/FAKE/7305422ea912e23c1c5300b23b3d0d7d8ec7d27f/help/content/pics/logo.png</iconUrl>
+    <description>FAKE - F# Make - is a build automation tool for .NET. Tasks and dependencies are specified in a DSL which is integrated in F#.</description>
+    <releaseNotes>ENHANCEMENT: Add Support for MSBuild 16 / VS 2019 - https://github.com/fsharp/FAKE/pull/2274
+ENHANCEMENT: Throw more helpful exception when directory not a git repository - https://github.com/fsharp/FAKE/pull/2275
+BUGFIX: Thread safe for `Path.toRelativeFrom` - https://github.com/fsharp/FAKE/pull/2268
+DOCS: Re-Add NuGet link - https://github.com/fsharp/FAKE/issues/2278
+DOCS: Fix broken link in getting-started - https://github.com/fsharp/FAKE/issues/2276</releaseNotes>
+    <tags>build fake f#</tags>
+    <packageTypes>
+      <packageType name="DotnetTool" />
+    </packageTypes>
+  </metadata>
+</package>

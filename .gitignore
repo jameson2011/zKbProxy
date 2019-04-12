@@ -248,7 +248,7 @@ _Pvt_Extensions
 paket-files/
 
 # FAKE - F# Make
-.fake/
+#.fake/
 
 # JetBrains Rider
 .idea/

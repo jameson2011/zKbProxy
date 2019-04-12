@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FAKECache>
+  <Assemblies>
+    <Assembly Location="C:\Windows\Microsoft.NET\Framework\v4.0.30319\mscorlib.dll" FullName="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Version="4.0.0.0" />
+    <Assembly Location="C:\Projects\GitRepos\zKbProxy\packages\FAKE\tools\FAKE.exe" FullName="FAKE, Version=5.8.4.0, Culture=neutral, PublicKeyToken=null" Version="5.8.4.0" />
+    <Assembly Location="C:\Projects\GitRepos\zKbProxy\packages\FAKE\tools\FakeLib.dll" FullName="FakeLib, Version=5.8.4.0, Culture=neutral, PublicKeyToken=null" Version="5.8.4.0" />
+    <Assembly Location="C:\Projects\GitRepos\zKbProxy\packages\FAKE\tools\FSharp.Core.dll" FullName="FSharp.Core, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" Version="4.5.0.0" />
+    <Assembly Location="C:\Projects\GitRepos\zKbProxy\packages\FAKE\tools\Argu.dll" FullName="Argu, Version=5.1.0.0, Culture=neutral, PublicKeyToken=null" Version="5.1.0.0" />
+    <Assembly Location="C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Core\v4.0_4.0.0.0__b77a5c561934e089\System.Core.dll" FullName="System.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Version="4.0.0.0" />
+    <Assembly Location="C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System\v4.0_4.0.0.0__b77a5c561934e089\System.dll" FullName="System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Version="4.0.0.0" />
+    <Assembly Location="C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Numerics\v4.0_4.0.0.0__b77a5c561934e089\System.Numerics.dll" FullName="System.Numerics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Version="4.0.0.0" />
+    <Assembly Location="C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Configuration\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.dll" FullName="System.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" Version="4.0.0.0" />
+    <Assembly Location="C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Xml\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.dll" FullName="System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Version="4.0.0.0" />
+    <Assembly Location="C:\Projects\GitRepos\zKbProxy\packages\FAKE\tools\HashLib.dll" FullName="HashLib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null" Version="2.0.0.0" />
+    <Assembly Location="C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Xml.Linq\v4.0_4.0.0.0__b77a5c561934e089\System.Xml.Linq.dll" FullName="System.Xml.Linq, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Version="4.0.0.0" />
+    <Assembly Location="C:\Projects\GitRepos\zKbProxy\packages\FAKE\tools\FSharp.Compiler.Service.dll" FullName="FSharp.Compiler.Service, Version=25.0.1.0, Culture=neutral, PublicKeyToken=null" Version="25.0.1.0" />
+    <Assembly Location="C:\Projects\GitRepos\zKbProxy\packages\FAKE\tools\System.ValueTuple.dll" FullName="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" Version="4.0.3.0" />
+    <Assembly Location="C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Runtime\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Runtime.dll" FullName="System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" Version="4.0.0.0" />
+    <Assembly Location="C:\WINDOWS\Microsoft.Net\assembly\GAC_32\ISymWrapper\v4.0_4.0.0.0__b03f5f7f11d50a3a\ISymWrapper.dll" FullName="ISymWrapper, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" Version="4.0.0.0" />
+    <Assembly Location="C:\Projects\GitRepos\zKbProxy\packages\Fake.Core.Target\lib\netstandard2.0\Fake.Core.Target.dll" FullName="Fake.Core.Target, Version=5.8.4.0, Culture=neutral, PublicKeyToken=null" Version="5.8.4.0" />
+    <Assembly Location="C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\netstandard\v4.0_2.0.0.0__cc7b13ffcd2ddd51\netstandard.dll" FullName="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" Version="2.0.0.0" />
+    <Assembly Location="C:\Projects\GitRepos\zKbProxy\packages\FAKE.IO.FileSystem\lib\netstandard2.0\Fake.IO.FileSystem.dll" FullName="Fake.IO.FileSystem, Version=5.8.4.0, Culture=neutral, PublicKeyToken=null" Version="5.8.4.0" />
+    <Assembly Location="C:\Projects\GitRepos\zKbProxy\packages\Fake.Core.CommandLineParsing\lib\netstandard2.0\Fake.Core.CommandLineParsing.dll" FullName="Fake.Core.CommandLineParsing, Version=5.8.4.0, Culture=neutral, PublicKeyToken=null" Version="5.8.4.0" />
+    <Assembly Location="C:\Projects\GitRepos\zKbProxy\packages\FAKE\tools\Mono.Cecil.dll" FullName="Mono.Cecil, Version=0.10.1.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e" Version="0.10.1.0" />
+  </Assemblies>
+</FAKECache>
