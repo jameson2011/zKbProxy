@@ -20,4 +20,5 @@ Notes on installation, protocols and use cases can be found in the Wiki.
 
 ## Builds
 
-[![Build status](https://ci.appveyor.com/api/projects/status/m4id0nwmr4ypyg6h?svg=true)](https://ci.appveyor.com/project/jameson2011/zkbproxy)
+[![Build status](https://ci.appveyor.com/api/projects/status/yeh7vtj8jasefuen?svg=true)](https://ci.appveyor.com/project/jameson2011/zkbproxy)
+

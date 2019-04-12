@@ -1,4 +1,5 @@
 #load ".fake/build.fsx/intellisense.fsx"
+
 open Fake.Core
 open Fake.DotNet
 open Fake.IO
@@ -6,11 +7,6 @@ open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
 open Fake.Core.TargetOperators
 
-let buildNumber() =
-  match System.Environment.GetEnvironmentVariable("APPVEYOR_BUILD_VERSION") with
-    | null -> System.Console.Out.WriteLine("APPVEYOR_BUILD_VERSION is null")
-              "0.0.1"
-    | v -> v          
 
 let buildDir = "./artifacts"
 let publishDir = "publish"
@@ -20,8 +16,6 @@ let buildOptions = fun (opts: DotNet.BuildOptions) ->
                                 { opts with
                                     Configuration = DotNet.BuildConfiguration.Release
                                     OutputPath = buildDir |> Path.combine "../../" |> Some
-                                    MSBuildParams = { opts.MSBuildParams with 
-                                                            Properties = [ ("AssemblyFileVersion", buildNumber() ) ] }
                                     }
 
 let packOptions = fun (opts: DotNet.PackOptions) -> 
@@ -32,8 +26,6 @@ let packOptions = fun (opts: DotNet.PackOptions) ->
 
 let publishOptions = fun (opts: DotNet.PublishOptions) -> 
                                 { opts with
-                                    
-                                    //VersionSuffix = buildNumber() |> Some
                                     Configuration = DotNet.BuildConfiguration.Release;
                                  }
 
@@ -43,7 +35,6 @@ Target.create "Clean" (fun _ ->
     ++ buildDir
     ++ publishDir
     |> Shell.cleanDirs
-
 )
 
 Target.create "Build" (fun _ ->
