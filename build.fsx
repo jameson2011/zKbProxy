@@ -1,44 +1,59 @@
-#r @"packages/FAKE/tools/FakeLib.dll"
-#r @"packages/Fake.Core.Target/lib/netstandard2.0/Fake.Core.Target.dll"
-#r @"packages/FAKE.IO.FileSystem/lib/netstandard2.0/Fake.IO.FileSystem.dll"
-#r @"packages/Fake.Core.CommandLineParsing/lib/netstandard2.0/Fake.Core.CommandLineParsing.dll"
+#load ".fake/build.fsx/intellisense.fsx"
 
-open Fake
 open Fake.Core
-open Fake.Core.TargetOperators
 open Fake.DotNet
+open Fake.IO
 open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
-open Fake.IO
+open Fake.Core.TargetOperators
 
-let buildNumber() =
-  match System.Environment.GetEnvironmentVariable("APPVEYOR_BUILD_VERSION") with
-    | null -> System.Console.Out.WriteLine("APPVEYOR_BUILD_VERSION is null")
-              "0.0.1"
-    | v -> v          
 
-let buildDir = "./artifacts/"
-let mainSolution = ".\\zKbProxy.sln"
+let buildDir = "./artifacts"
+let publishDir = "publish"
+let mainSolution = "./zKbProxy.sln"
 
-let msbuildOptions = fun (opts: MSBuildParams) -> 
+let buildOptions = fun (opts: DotNet.BuildOptions) -> 
                                 { opts with
-                                    RestorePackagesFlag = false
-                                    Targets = ["Rebuild"]
-                                    Verbosity = Some MSBuildVerbosity.Normal
-                                    Properties =
-                                      [ "VisualStudioVersion", "15.0"
-                                        "Configuration", "Release"
-                                      ] }
+                                    Configuration = DotNet.BuildConfiguration.Release
+                                    OutputPath = buildDir |> Path.combine "../../" |> Some
+                                    }
 
-// Targets
-Fake.Core.Target.create "ScrubArtifacts" (fun _ -> Fake.IO.Shell.cleanDirs [ buildDir ])
+let packOptions = fun (opts: DotNet.PackOptions) -> 
+                                { opts with 
+                                    Configuration = DotNet.BuildConfiguration.Release; 
+                                    NoBuild = true; 
+                                    OutputPath = Some buildDir }
 
-Fake.Core.Target.create "BuildApp" (fun _ -> mainSolution |> Fake.DotNet.MSBuild.build msbuildOptions)
-   
-Fake.Core.Target.create "Default" (fun _ -> Fake.Core.Trace.trace "Done!" )
+let publishOptions = fun (opts: DotNet.PublishOptions) -> 
+                                { opts with
+                                    Configuration = DotNet.BuildConfiguration.Release;
+                                 }
 
+Target.create "Clean" (fun _ ->
+    !! "src/**/bin"
+    ++ "src/**/obj"
+    ++ buildDir
+    ++ publishDir
+    |> Shell.cleanDirs
+)
 
-// Dependencies
-"ScrubArtifacts" 
-==> "BuildApp"
-==> "Default"
+Target.create "Build" (fun _ ->
+    !! mainSolution
+    |> Seq.iter (DotNet.build buildOptions)
+)
+
+Target.create "Pack" (fun _ -> !! "src/**/zKbProxy.fsproj" |> Seq.iter (DotNet.pack packOptions ) )
+
+Target.create "Publish" (fun _ -> !! "src/**/zKbProxy.fsproj" |> Seq.iter (DotNet.publish publishOptions ) )
+
+Target.create "CopyPublication" (fun _ -> Shell.copyDir publishDir @"src\zKbProxy\bin\Release\netcoreapp2.2\publish" (fun _ -> true) )
+
+Target.create "All" ignore
+
+"Clean"
+  ==> "Build"
+  ==> "Publish"
+  ==> "CopyPublication"
+  ==> "All"
+
+Target.runOrDefault "All"

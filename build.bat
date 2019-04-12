@@ -8,9 +8,9 @@ if errorlevel 1 (
 )
 
 
-SET TARGET="Default"
+SET TARGET="All"
 
 IF NOT [%1]==[] (set TARGET="%1")
 
 
-".\packages\FAKE\tools\Fake.exe" "build.fsx" "target=%TARGET%" --removeLegacyFakeWarning
+".\.fake\Fake.exe" run "build.fsx" -t %TARGET%
