@@ -20,6 +20,12 @@ module WebServices=
         let rng = System.Random()
         fun () ->   let i = rng.Next(0, errors.Length)
                     errors.[i]
+                    
+    let private clientIp (ctx: HttpContext) = ctx.clientIp false []
+
+    let private clientPort (ctx: HttpContext) = ctx.clientPort false []
+
+    let private logInfo (log: PostMessage) = Actors.messageSource "WebServices" >> ActorMessage.Info >> log
 
 
     let emptyPackage = @"{""package"":null}"
@@ -40,13 +46,14 @@ module WebServices=
     let logRouteInvoke (log: PostMessage) (ctx: HttpContext) =
         async {
             
-            let clientIp = ctx.clientIp false []
-            let msg = sprintf "Received [%s] [%s] from [%s]" (ctx.request.method.ToString()) ctx.request.path (clientIp.ToString()) 
+            let clientIp = clientIp ctx 
 
-            msg |> Actors.messageSource "WebServices" |> ActorMessage.Info |> log
+            sprintf "Received [%s] [%s] from [%s:%s]" (ctx.request.method.ToString()) ctx.request.path (clientIp.ToString()) (clientPort(ctx).ToString())
+                |> logInfo log
 
             return Some ctx
         }
+        
 
     let getKill (provider: IKillProviderActor) id (ctx: HttpContext)=
         async {
