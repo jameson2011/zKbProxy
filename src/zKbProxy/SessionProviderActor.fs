@@ -2,7 +2,10 @@
 
 open System
 open Strings
+open MongoDB.Bson
+open MongoDB.Driver
     
+
 type private SessionCache = 
     {
         SessionTimeout: TimeSpan;
@@ -15,8 +18,18 @@ type SessionProviderActor(log: PostMessage, stats: PostMessage, config: Configur
     let logTrace = msgSource >> ActorMessage.Trace >> log 
     let logInfo = msgSource >> ActorMessage.Info >> log 
 
+    let dbCol = if not config.NoCache then
+                    MongoDb.sessionCollection config.MongoServer config.DbName config.SessionsDbCollection config.MongoUserName config.MongoPassword |> Some
+                else None
+
+    let write = match dbCol with
+                | Some col ->   (fun (doc: BsonDocument) -> MongoDb.upsert col doc)
+                | None ->       (fun _ -> 0 |> ignore )
+                
+    //do @"{_id: ""test"", num: 12345 }" |> Bson.ofJson |> write
+    
     let sessionCache = {    SessionTimeout = config.SessionTimeout; 
-                            Sessions = Map.empty; 
+                            Sessions = Map.empty; // TODO: hydrate from DB
                         }
 
     let purgeSessions (cache: SessionCache) =
@@ -32,6 +45,7 @@ type SessionProviderActor(log: PostMessage, stats: PostMessage, config: Configur
 
         if victimKeys |> Seq.exists (fun _ -> true) then
             "Starting session purge..." |> logInfo
+            // TODO: purge from DB
             let newMap = victimKeys |> Seq.fold (fun (m: Map<_,_>) k -> m.Remove(k)) cache.Sessions
             victimKeys |> Seq.map ActorMessage.SessionPurged |> Seq.iter stats
             
@@ -51,6 +65,7 @@ type SessionProviderActor(log: PostMessage, stats: PostMessage, config: Configur
             | name ->   if cache.Sessions.ContainsKey(name) |> not then
                             let provider = createKillProvider name
                             let sessions = cache.Sessions.Add(name, provider)
+                            // TODO: add to DB
                             sprintf "Created new session %s. %d active session(s)." name sessions.Count |> logInfo
                             sessions, provider
                         else 

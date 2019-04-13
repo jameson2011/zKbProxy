@@ -2,7 +2,7 @@
   "profiles": {
     "zKbProxy": {
       "commandName": "Project",
-      "commandLineArgs": "run --server localhost -db zKbRedisqProxy -col zkbKills"
+      "commandLineArgs": "run --server localhost -db zKbRedisqProxy -killscol zkbKills"
     }
   }
 }

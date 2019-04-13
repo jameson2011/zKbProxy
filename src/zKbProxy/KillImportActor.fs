@@ -9,7 +9,7 @@
         let logInfo = msgSource >> ActorMessage.Info >> log
         let dbCollection = 
             sprintf "Initialising DB connection to %s %s.%s..." config.MongoServer config.DbName config.KillsDbCollection |> logInfo
-            MongoDb.defaultCollection config.MongoServer config.DbName config.KillsDbCollection config.MongoUserName config.MongoPassword
+            MongoDb.killsCollection config.MongoServer config.DbName config.KillsDbCollection config.MongoUserName config.MongoPassword
 
         let insertOne (col: IMongoCollection<Object>) doc =
             col.InsertOne(doc)

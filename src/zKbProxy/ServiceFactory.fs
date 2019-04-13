@@ -39,9 +39,13 @@
         let sessionProvider = SessionProviderActor(postLog, postStats, config, killProvider, createKillProvider)
 
         let sourceForward = match config.NoCache with
-                            | true ->   Actors.broadcast [ (killProvider :?> IActor).Post; (sessionProvider :> IActor).Post; postStats ]
+                            | true ->   Actors.broadcast [  (killProvider :?> IActor).Post; 
+                                                            (sessionProvider :> IActor).Post; 
+                                                            postStats ]
                             | _ ->      let dumpActor = KillImportActor(postLog, config) :> IActor
-                                        Actors.broadcast [ (killProvider :?> IActor).Post; (sessionProvider :> IActor).Post; dumpActor.Post; postStats ]
+                                        Actors.broadcast [  (killProvider :?> IActor).Post; 
+                                                            (sessionProvider :> IActor).Post; 
+                                                            dumpActor.Post; postStats ]
 
         let killSource = ZkbSourceActor(postLog, sourceForward)
 

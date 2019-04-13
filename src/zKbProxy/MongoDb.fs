@@ -3,7 +3,38 @@
     open MongoDB.Bson
     open MongoDB.Driver
     open ZkbProxy.Strings
+
+
+    module Bson =
+        open MongoDB.Bson.IO
+        open MongoDB.Bson.Serialization
+
+        let ofJson (json: string) =
+            BsonSerializer.Deserialize<BsonDocument>(json)
+        
+        let toJson (bson: BsonDocument) =            
+            let jsonWriterSettings = JsonWriterSettings()
+            jsonWriterSettings.OutputMode <- JsonOutputMode.Strict
+            jsonWriterSettings.Indent <- false
+            jsonWriterSettings.IndentChars <- ""
+            bson.ToJson(jsonWriterSettings)
+                        
+        let getDocId (bson: BsonDocument)=            
+            bson.Elements 
+            |> Seq.filter (fun e -> e.Name = "_id")
+            |> Seq.head
+
+        let getObjectId (bson: BsonDocument)=            
+            bson
+            |> getDocId
+            |> (fun id -> id.Value.AsObjectId)
+        
+        let getId (bson: BsonDocument)=            
+            bson
+            |> getDocId
+            |> (fun id -> id.Value.AsString)
     
+
 
     module MongoDb=
         let private defaultMongoPort = 27017
@@ -52,30 +83,30 @@
         let getCollection colName (db: IMongoDatabase) =
             db.GetCollection(colName)                
                             
-        let defaultCollection server dbName collectionName userName password=
-            server
-            |> connectionString userName password
-            |> setDbConnection dbName
-            |> initDb dbName
-            |> getCollection collectionName
-            |> setIndex "_v.package.killID"
+        let initCollection indexPath server dbName collectionName userName password =
+            let col = server
+                        |> connectionString userName password
+                        |> setDbConnection dbName
+                        |> initDb dbName
+                        |> getCollection collectionName
+            if indexPath <> "" then col |> setIndex indexPath
+            else                    col
 
-    module Bson =
-        open MongoDB.Bson.IO
-        open MongoDB.Bson.Serialization
 
-        let ofJson (json: string) =
-            BsonSerializer.Deserialize<BsonDocument>(json)
-        
-        let toJson (bson: BsonDocument) =            
-            let jsonWriterSettings = JsonWriterSettings()
-            jsonWriterSettings.OutputMode <- JsonOutputMode.Strict
-            jsonWriterSettings.Indent <- false
-            jsonWriterSettings.IndentChars <- ""
-            bson.ToJson(jsonWriterSettings)
-                        
-        let getObjectId (bson: BsonDocument)=            
-            bson.Elements 
-            |> Seq.filter (fun e -> e.Name = "_id")
-            |> Seq.head
-            |> (fun id -> id.Value.AsObjectId)
+
+        let killsCollection server dbName collectionName userName password=
+            initCollection "_v.package.killID" server dbName collectionName userName password 
+            
+        let sessionCollection server dbName collectionName userName password=
+            initCollection "" server dbName collectionName userName password 
+
+        let upsert (collection: IMongoCollection<BsonDocument>) (doc: BsonDocument) =
+            let opts = UpdateOptions()
+            opts.IsUpsert <- true
+            
+            let filter = doc
+                            |> Bson.getId
+                            |> sprintf @"{ _id: ""%s"" }" |> Bson.ofJson 
+                            |> FilterDefinition.op_Implicit
+            collection.ReplaceOne(filter, doc, opts) |> ignore 
+            
