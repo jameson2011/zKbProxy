@@ -44,6 +44,9 @@
 
     module MongoDb=
         let private defaultMongoPort = 27017
+
+        let private idFilter id =
+            sprintf @"{ _id: ""%s"" }" id
         
         let appendPort server = 
             match server |> split ":" with
@@ -110,9 +113,14 @@
             let opts = UpdateOptions()
             opts.IsUpsert <- true
             
-            let filter = doc
-                            |> Bson.getId
-                            |> sprintf @"{ _id: ""%s"" }" |> Bson.ofJson 
-                            |> FilterDefinition.op_Implicit
+            let filter = doc |> Bson.getId
+                             |> idFilter |> Bson.ofJson 
+                             |> FilterDefinition.op_Implicit
             collection.ReplaceOne(filter, doc, opts) |> ignore 
+            
+        let delete (collection: IMongoCollection<BsonDocument>) id =
+            
+            let filter = id |> idFilter |> Bson.ofJson 
+                            |> FilterDefinition.op_Implicit
+            collection.DeleteOne(filter) |> ignore
             

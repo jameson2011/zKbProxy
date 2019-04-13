@@ -31,7 +31,10 @@ type SessionProviderActor(log: PostMessage, stats: PostMessage, config: Configur
                 | Some col ->   (fun (doc: BsonDocument) -> MongoDb.upsert col doc)
                 | None ->       (fun _ -> 0 |> ignore )
     
-    
+    let delete = match dbCol with   
+                    | Some col ->   (fun id -> MongoDb.delete col id)
+                    | None ->       (fun _ -> 0 |> ignore)
+
     let sessionCache = {    SessionTimeout = config.SessionTimeout; 
                             Sessions = Map.empty; // TODO: hydrate from DB
                         }
@@ -49,10 +52,10 @@ type SessionProviderActor(log: PostMessage, stats: PostMessage, config: Configur
 
         if victimKeys |> Seq.exists (fun _ -> true) then
             "Starting session purge..." |> logInfo
-            // TODO: purge from DB
+            
             let newMap = victimKeys |> Seq.fold (fun (m: Map<_,_>) k -> m.Remove(k)) cache.Sessions
             victimKeys |> Seq.map ActorMessage.SessionPurged |> Seq.iter stats
-            
+            victimKeys |> Seq.iter delete 
             victimKeys |> Seq.map (sprintf "Purged session %s.") |> Seq.iter logInfo
             sprintf "Finished session purge. %d purged %d survivor(s)." victimKeys.Length newMap.Count |> logInfo
             
