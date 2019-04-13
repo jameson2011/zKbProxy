@@ -12,4 +12,5 @@ group Main
     nuget log4net
     nuget Microsoft.Extensions.CommandLineUtils
     nuget MongoDB.Driver
+	nuget Newtonsoft.Json
     nuget suave

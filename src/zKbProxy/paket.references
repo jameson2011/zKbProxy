@@ -2,3 +2,4 @@ Microsoft.Extensions.CommandLineUtils
 suave
 MongoDB.Driver
 log4net
+Newtonsoft.Json

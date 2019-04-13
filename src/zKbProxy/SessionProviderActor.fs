@@ -12,6 +12,11 @@ type private SessionCache =
         Sessions: Map<string, IKillProviderActor>;
     }
     
+type Session = 
+    { _id: string;
+        name: string;
+    }
+
 type SessionProviderActor(log: PostMessage, stats: PostMessage, config: Configuration, mainProvider: IKillProviderActor, createKillProvider: string -> IKillProviderActor)=
     let msgSource = Actors.messageSource typeof<SessionProviderActor>.Name 
     let logException (ex: Exception) = ex.Message |> msgSource |> ActorMessage.Error |> log
@@ -25,8 +30,7 @@ type SessionProviderActor(log: PostMessage, stats: PostMessage, config: Configur
     let write = match dbCol with
                 | Some col ->   (fun (doc: BsonDocument) -> MongoDb.upsert col doc)
                 | None ->       (fun _ -> 0 |> ignore )
-                
-    //do @"{_id: ""test"", num: 12345 }" |> Bson.ofJson |> write
+    
     
     let sessionCache = {    SessionTimeout = config.SessionTimeout; 
                             Sessions = Map.empty; // TODO: hydrate from DB
@@ -65,7 +69,7 @@ type SessionProviderActor(log: PostMessage, stats: PostMessage, config: Configur
             | name ->   if cache.Sessions.ContainsKey(name) |> not then
                             let provider = createKillProvider name
                             let sessions = cache.Sessions.Add(name, provider)
-                            // TODO: add to DB
+                            { Session._id = name; name = name} |> Bson.ofObject |> write
                             sprintf "Created new session %s. %d active session(s)." name sessions.Count |> logInfo
                             sessions, provider
                         else 

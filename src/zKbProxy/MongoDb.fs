@@ -9,6 +9,7 @@
         open MongoDB.Bson.IO
         open MongoDB.Bson.Serialization
 
+
         let ofJson (json: string) =
             BsonSerializer.Deserialize<BsonDocument>(json)
         
@@ -18,7 +19,12 @@
             jsonWriterSettings.Indent <- false
             jsonWriterSettings.IndentChars <- ""
             bson.ToJson(jsonWriterSettings)
-                        
+
+        let ofObject (value) = 
+            value 
+            |> Newtonsoft.Json.JsonConvert.SerializeObject
+            |> ofJson
+            
         let getDocId (bson: BsonDocument)=            
             bson.Elements 
             |> Seq.filter (fun e -> e.Name = "_id")
