@@ -1,9 +1,7 @@
 ﻿namespace ZkbProxy
 
 open System
-open Strings
 open MongoDB.Bson
-open MongoDB.Driver
     
 
 type private SessionCache = 
@@ -35,8 +33,21 @@ type SessionProviderActor(log: PostMessage, stats: PostMessage, config: Configur
                     | Some col ->   (fun id -> MongoDb.delete col id)
                     | None ->       (fun _ -> 0 |> ignore)
 
+    let existingSessions = match dbCol with     
+                            | Some col ->   MongoDb.query<Session> col
+                                                |> Seq.map (fun s -> s.name) 
+                                                |> List.ofSeq
+                            | None ->       [] 
+
+                            |> List.map (fun n -> (n, createKillProvider n))
+                            |> Map.ofList
+    do if existingSessions.Count > 0 then
+        existingSessions 
+                |> Seq.map (fun x -> sprintf "Starting session %s." x.Key) 
+                |> Seq.iter logInfo
+
     let sessionCache = {    SessionTimeout = config.SessionTimeout; 
-                            Sessions = Map.empty; // TODO: hydrate from DB
+                            Sessions = existingSessions; 
                         }
 
     let purgeSessions (cache: SessionCache) =

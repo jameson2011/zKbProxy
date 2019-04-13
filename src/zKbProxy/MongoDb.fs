@@ -25,6 +25,9 @@
             |> Newtonsoft.Json.JsonConvert.SerializeObject
             |> ofJson
             
+        let toObject<'a> doc =
+            doc |> toJson |> Newtonsoft.Json.JsonConvert.DeserializeObject<'a>
+
         let getDocId (bson: BsonDocument)=            
             bson.Elements 
             |> Seq.filter (fun e -> e.Name = "_id")
@@ -123,4 +126,10 @@
             let filter = id |> idFilter |> Bson.ofJson 
                             |> FilterDefinition.op_Implicit
             collection.DeleteOne(filter) |> ignore
+            
+        let query<'a> (collection: IMongoCollection<BsonDocument>) =
+            collection.AsQueryable<BsonDocument>() 
+                |> Seq.map Bson.toObject<'a>
+
+                                    
             
