@@ -21,7 +21,7 @@ type KillProviderActor(log: PostMessage, stats: PostMessage, config: Configurati
         
     let logException (ex: Exception) = ActorMessage.Error (typeof<KillProviderActor>.Name,ex.Message) |> log
 
-    let dbCollection = MongoDb.defaultCollection config.MongoServer config.DbName config.DbCollection config.MongoUserName config.MongoPassword
+    let dbCollection = MongoDb.defaultCollection config.MongoServer config.DbName config.KillsDbCollection config.MongoUserName config.MongoPassword
                     
     let getKill id =          
         async {  

@@ -8,8 +8,8 @@
         let logException (ex: Exception) = ex.Message |> msgSource |> ActorMessage.Error |> log
         let logInfo = msgSource >> ActorMessage.Info >> log
         let dbCollection = 
-            sprintf "Initialising DB connection to %s %s.%s..." config.MongoServer config.DbName config.DbCollection |> logInfo
-            MongoDb.defaultCollection config.MongoServer config.DbName config.DbCollection config.MongoUserName config.MongoPassword
+            sprintf "Initialising DB connection to %s %s.%s..." config.MongoServer config.DbName config.KillsDbCollection |> logInfo
+            MongoDb.defaultCollection config.MongoServer config.DbName config.KillsDbCollection config.MongoUserName config.MongoPassword
 
         let insertOne (col: IMongoCollection<Object>) doc =
             col.InsertOne(doc)

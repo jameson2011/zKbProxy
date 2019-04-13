@@ -12,7 +12,8 @@ module CommandLine=
     let killSourceUriArg = "kill"
     let dbServerArg = "svr"
     let dbNameArg = "db"
-    let dbCollectionArg = "col"
+    let dbKillsCollectionArg = "killscol"
+    let dbSessionCollectionArg = "sessionscol"
     let dbUserArg = "un"
     let dbPasswordArg = "pw"
     let webPortArg = "port"
@@ -21,7 +22,7 @@ module CommandLine=
     let sessionTimeoutArg = "sessiontimeout"
 
     let private longestArg = 
-        [ killSourceUriArg; dbServerArg; dbNameArg; dbCollectionArg; 
+        [ killSourceUriArg; dbServerArg; dbNameArg; dbKillsCollectionArg; dbSessionCollectionArg;
             dbUserArg; dbPasswordArg; webPortArg; liveBufferSizeArg; noCacheArg; 
             sessionTimeoutArg; ]
         |> Seq.map String.length
@@ -95,22 +96,27 @@ module CommandLine=
             | (true,x) -> TimeSpan.FromMinutes(float x)
             | _ -> failwith "Invalid session timeout. Must be a positive non-zero integer."
 
-    let addNoCacheArg =                 addSwitchOption noCacheArg noCacheArg "Do not write killmails to MongoDB. If ommitted, killmails are written to cache. Previously cached kills are available."
-    let getNoCacheValue app =           getSwitchOption noCacheArg app
+    let addNoCacheArg =                     addSwitchOption noCacheArg noCacheArg "Do not write killmails to MongoDB. If ommitted, killmails are written to cache. Previously cached kills are available."
+    let getNoCacheValue app =               getSwitchOption noCacheArg app
     
-    let addMongoServerArg =             addSingleOption dbServerArg "server" ("The MongoDB server name. Default: " + ConfigurationDefaults.MongoServer)
-    let getMongoServerValue app =       getStringOption dbServerArg app
+    let addMongoServerArg =                 addSingleOption dbServerArg "server" ("The MongoDB server name. Default: " + ConfigurationDefaults.MongoServer)
+    let getMongoServerValue app =           getStringOption dbServerArg app
     
-    let addMongoDbArg =                 addSingleOption dbNameArg dbNameArg ("The MongoDB DB name. Default: " + ConfigurationDefaults.DbName)
-    let getMongoDbValue app =           getStringOption dbNameArg app
-    let addMongoCollectionArg =         addSingleOption dbCollectionArg "collection" ("The MongoDB DB collection name. Default: " + ConfigurationDefaults.ColName)
-    let getMongoCollectionValue app =   getStringOption dbCollectionArg app    
-    let addMongoUserArg =               addSingleOption dbUserArg "user" "User name for MongoDB. Default: no auth is assumed."
-    let getMongoUserValue app =         getStringOption dbUserArg app    
-    let addMongoPasswordArg =           addSingleOption dbPasswordArg "password" "MongoDB user password"
-    let getMongoPasswordValue app =     getStringOption dbPasswordArg app
+    let addMongoDbArg =                     addSingleOption dbNameArg dbNameArg ("The MongoDB DB name. Default: " + ConfigurationDefaults.DbName)
+    let getMongoDbValue app =               getStringOption dbNameArg  app
+
+    let addMongoKillsCollectionArg =        addSingleOption dbKillsCollectionArg "killscol" ("The kills DB collection name. Default: " + ConfigurationDefaults.KillsColName)
+    let getMongoKillsCollectionValue app =  getStringOption dbKillsCollectionArg app    
+
+    let addMongoSessionsCollectionArg =        addSingleOption dbSessionCollectionArg "sessionscol" ("The sessions DB collection name. Default: " + ConfigurationDefaults.SessionsColName)
+    let getMongoSessionsCollectionValue app =  getStringOption dbSessionCollectionArg app    
+
+    let addMongoUserArg =                   addSingleOption dbUserArg "user" "User name for MongoDB. Default: no auth is assumed."
+    let getMongoUserValue app =             getStringOption dbUserArg app    
+    let addMongoPasswordArg =               addSingleOption dbPasswordArg "password" "MongoDB user password"
+    let getMongoPasswordValue app =         getStringOption dbPasswordArg app
     
-    let addWebServerPortArg =           addSingleOption webPortArg "port" ("The proxy's web server port. Default: " + ConfigurationDefaults.WebServerPort.ToString())
+    let addWebServerPortArg =               addSingleOption webPortArg "port" ("The proxy's web server port. Default: " + ConfigurationDefaults.WebServerPort.ToString())
     let getWebServerPortValue app =     
         match getStringOption webPortArg app with
         | None  -> None
@@ -136,7 +142,7 @@ module CommandLine=
     let addRun cmd (app: App) =
         let f = setDesc "Run the proxy" 
                                     >> addKillSourceUriArg
-                                    >> addMongoServerArg >> addMongoDbArg >> addMongoCollectionArg 
+                                    >> addMongoServerArg >> addMongoDbArg >> addMongoKillsCollectionArg >> addMongoSessionsCollectionArg
                                     >> addMongoUserArg >> addMongoPasswordArg 
                                     >> addWebServerPortArg
                                     >> addLiveBufferSizeArg

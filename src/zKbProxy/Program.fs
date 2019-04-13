@@ -17,8 +17,10 @@ module Program=
                                         |> Option.defaultValue ConfigurationDefaults.MongoServer;
                  DbName = CommandLine.getMongoDbValue app 
                                         |> Option.defaultValue ConfigurationDefaults.DbName;
-                 DbCollection = CommandLine.getMongoCollectionValue app 
-                                        |> Option.defaultValue ConfigurationDefaults.ColName;
+                 KillsDbCollection = CommandLine.getMongoKillsCollectionValue app 
+                                        |> Option.defaultValue ConfigurationDefaults.KillsColName;
+                 SessionsDbCollection = CommandLine.getMongoSessionsCollectionValue app
+                                        |> Option.defaultValue ConfigurationDefaults.SessionsColName;
                  MongoUserName = CommandLine.getMongoUserValue app 
                                         |> Option.defaultValue ConfigurationDefaults.UserName;
                  MongoPassword = CommandLine.getMongoPasswordValue app 
@@ -45,7 +47,8 @@ module Program=
         validateString config.KillSourceUri CommandLine.killSourceUriArg
         validateString config.MongoServer CommandLine.dbServerArg
         validateString config.DbName CommandLine.dbNameArg
-        validateString config.DbCollection CommandLine.dbCollectionArg
+        validateString config.KillsDbCollection CommandLine.dbKillsCollectionArg
+        validateString config.SessionsDbCollection CommandLine.dbSessionCollectionArg
 
         validateValue config.LiveBufferSize CommandLine.liveBufferSizeArg 0 10000
         validateValue config.WebServerPort CommandLine.webPortArg 80us 65535us

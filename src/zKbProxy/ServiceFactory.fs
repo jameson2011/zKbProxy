@@ -5,14 +5,15 @@
         let reportConfig (log: ActorMessage -> unit) (config: Configuration) = 
             [
                 "Starting with config:";
-                sprintf "Web port:          %d" config.WebServerPort;
-                sprintf "Mongo server:      %s" config.MongoServer;
-                sprintf "Mongo DB:          %s" config.DbName;
-                sprintf "Mongo collection:  %s" config.DbCollection;
-                sprintf "Kill source:       %s" config.KillSourceUri;
-                sprintf "No Caching:        %b" config.NoCache;
-                sprintf "Live buffer size:  %d" config.LiveBufferSize;
-                sprintf "Session timeout:   %f" config.SessionTimeout.TotalMinutes;
+                sprintf "Web port:            %d" config.WebServerPort;
+                sprintf "Mongo server:        %s" config.MongoServer;
+                sprintf "Mongo DB:            %s" config.DbName;
+                sprintf "Kills collection:    %s" config.KillsDbCollection;
+                sprintf "Sessions collection: %s" config.SessionsDbCollection;
+                sprintf "Kill source:         %s" config.KillSourceUri;
+                sprintf "No Caching:          %b" config.NoCache;
+                sprintf "Live buffer size:    %d" config.LiveBufferSize;
+                sprintf "Session timeout:     %f" config.SessionTimeout.TotalMinutes;
             ] 
             |> Strings.join System.Environment.NewLine
             |> (fun s -> ActorMessage.Info (typeof<ServiceFactory>.Name, s))

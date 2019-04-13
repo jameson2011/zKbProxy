@@ -10,7 +10,9 @@
         [<Literal>]
         let DbName = "zkbproxy"
         [<Literal>]
-        let ColName = "zkbkills"
+        let KillsColName = "zkbkills"
+        [<Literal>]
+        let SessionsColName = "sessions"
         [<Literal>]
         let UserName = ""
         [<Literal>]
@@ -29,7 +31,8 @@
             NoCache: bool;
             MongoServer: string;
             DbName: string;
-            DbCollection: string;
+            KillsDbCollection: string;
+            SessionsDbCollection: string;
             MongoUserName: string;
             MongoPassword: string;
             WebServerPort: uint16;
@@ -43,7 +46,8 @@
                     NoCache = false;
                     MongoServer = ConfigurationDefaults.MongoServer; 
                     DbName = ConfigurationDefaults.DbName; 
-                    DbCollection = ConfigurationDefaults.ColName; 
+                    KillsDbCollection = ConfigurationDefaults.KillsColName; 
+                    SessionsDbCollection = ConfigurationDefaults.SessionsColName;
                     MongoUserName = ConfigurationDefaults.UserName; 
                     MongoPassword = ConfigurationDefaults.UserPassword;
                     WebServerPort = ConfigurationDefaults.WebServerPort; 
