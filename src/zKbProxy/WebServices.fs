@@ -8,7 +8,7 @@ open ZkbProxy.Strings
 type SessionStats = {
         name: string;
         queued: int64;
-        lastKill: DateTimeOffset
+        lastKillSent: DateTimeOffset
     }
 type Stats = {
         importedKills: int64;
@@ -161,7 +161,7 @@ module WebServices=
         let get (stats: StreamStatistics) name =
             { SessionStats.name = name;
                 queued = int64 stats.KillBufferSize;
-                lastKill = DateTimeOffset(stats.LastKillPull) }
+                lastKillSent = DateTimeOffset(stats.LastKillPull) }
 
             
         async{
