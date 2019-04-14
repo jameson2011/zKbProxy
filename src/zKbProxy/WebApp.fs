@@ -61,37 +61,38 @@ module WebApp=
 
     let webRoutes (log: PostMessage) (sessionProvider: SessionProviderActor) (statsProvider: StatisticsActor) = 
         let killProvider = sessionProvider.MainProvider()
+        let logRequest = WebServices.logRouteInvoke log
         choose
             [   GET  >=> choose [
                                 
-                            path "/kills/"  >=> WebServices.logRouteInvoke log 
+                            path "/kills/"  >=> logRequest 
                                             >=> WebServices.getNextLiveKill ConfigurationDefaults.DefaultTtl killProvider 
                                             >=> WebServices.setNoCache >=> WebServices.jsonMimeType
                                                                 
-                            pathScan "/%s/kills/" (fun sessionId -> WebServices.logRouteInvoke log >=>
+                            pathScan "/%s/kills/" (fun sessionId -> logRequest >=>
                                                                     (Strings.toLower sessionId 
                                                                     |> sessionProvider.GetSession 
                                                                     |> Async.RunSynchronously
                                                                     |> WebServices.getNextLiveKill ConfigurationDefaults.DefaultTtl) )
                                                     >=> WebServices.setNoCache >=> WebServices.jsonMimeType
 
-                            path "/kills/replay/cycle/" >=> WebServices.logRouteInvoke log 
+                            path "/kills/replay/cycle/" >=> logRequest 
                                                         >=> WebServices.getNextReplayKill killProvider true
                                                         >=> WebServices.setNoCache >=> WebServices.jsonMimeType
                             
-                            path "/kills/replay/"       >=> WebServices.logRouteInvoke log 
+                            path "/kills/replay/"       >=> logRequest 
                                                         >=> WebServices.getNextReplayKill killProvider false
                                                         >=> WebServices.setNoCache >=> WebServices.jsonMimeType
                                 
 
-                            path "/kills/null/" >=> WebServices.logRouteInvoke log >=> OK WebServices.emptyPackage >=> WebServices.jsonMimeType
+                            path "/kills/null/" >=> logRequest >=> OK WebServices.emptyPackage >=> WebServices.jsonMimeType
                                 
-                            pathScan "/kills/%s/"  (fun (id) -> WebServices.logRouteInvoke log >=> (WebServices.getKill killProvider id )) 
+                            pathScan "/kills/%s/"  (fun (id) -> logRequest >=> (WebServices.getKill killProvider id )) 
                                                 >=> WebServices.setNoCache 
                                 
-                            path "/errors/random/" >=> WebServices.logRouteInvoke log >=> WebServices.getRandomError
+                            path "/errors/random/" >=> logRequest >=> WebServices.getRandomError
 
-                            path "/stats/" >=> WebServices.logRouteInvoke log 
+                            path "/stats/" >=> logRequest 
                                             >=> (WebServices.getStats statsProvider) 
                                             >=> WebServices.textMimeType >=> WebServices.setNoCache
 
@@ -99,7 +100,7 @@ module WebApp=
                             ];
 
                 POST >=> choose [                                
-                            path "/kills/replay/reset/" >=> WebServices.logRouteInvoke log 
+                            path "/kills/replay/reset/" >=> logRequest 
                                                         >=> WebServices.resetReplayKill killProvider 
                                                         >=> WebServices.setNoCache >=> WebServices.jsonMimeType
                         ];
