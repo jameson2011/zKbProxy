@@ -96,6 +96,10 @@ module WebApp=
                                             >=> (WebServices.getStats statsProvider) 
                                             >=> WebServices.textMimeType >=> WebServices.setNoCache
 
+                            path "/stats/json/" >=> logRequest 
+                                            >=> (WebServices.getStatsJson statsProvider) 
+                                            >=> WebServices.jsonMimeType >=> WebServices.setNoCache
+
                             path "/favicon.ico" >=> Suave.Successful.no_content >=> WebServices.setCache 99999999
                             ];
 

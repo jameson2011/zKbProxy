@@ -5,6 +5,17 @@ open Suave
 open Suave.Operators
 open ZkbProxy.Strings    
     
+type SessionStats = {
+        name: string;
+        queued: int64;
+        lastKill: DateTimeOffset
+    }
+type Stats = {
+        importedKills: int64;
+        sessions: SessionStats list
+    }
+
+
 module WebServices=
 
     let private errors = [| Suave.ServerErrors.BAD_GATEWAY ""; 
@@ -142,5 +153,34 @@ module WebServices=
                 
             return! Successful.OK response ctx
         }
+        
+    
+    let getStatsJson (statsProvider: StatisticsActor) (ctx: HttpContext)=            
+
+        
+        let get (stats: StreamStatistics) name =
+            { SessionStats.name = name;
+                queued = int64 stats.KillBufferSize;
+                lastKill = DateTimeOffset(stats.LastKillPull) }
+
             
+        async{
+            let! stats = statsProvider.GetStats()
+            let sessionStats = stats.SessionStreamStatistics 
+                                |> Seq.map (fun k -> get k.Value k.Key)
+                                |> Seq.sortBy (fun s -> s.name)
+                                |> List.ofSeq
+
+            let mainStats = stats.MainStreamStatistics 
+                                |> (fun s -> get s "Live")
+
+
+            let result = { Stats.importedKills = int64 stats.ImportedKills;
+                            sessions = [ mainStats ] @ sessionStats
+                            }
+
+            let response = Newtonsoft.Json.JsonConvert.SerializeObject(result)
+                
+            return! Successful.OK response ctx
+        }
             
