@@ -27,7 +27,7 @@ module Program=
                                         |> Option.defaultValue ConfigurationDefaults.UserPassword;
                  WebServerPort = CommandLine.getWebServerPortValue app 
                                         |> Option.defaultValue 80us;
-                 LiveBufferSize = CommandLine.getLiveBufferSizeValue app 
+                 BufferSize = CommandLine.getLiveBufferSizeValue app 
                                         |> Option.defaultValue 2000;
                  NoCache = CommandLine.getNoCacheValue app;
                  SessionTimeout = CommandLine.getSessionTimeoutArg app;
@@ -41,7 +41,7 @@ module Program=
 
         let validateValue value name min max = 
             match value with
-            | x when x < min || x > max -> invalidArg name "Argument out of range"
+            | x when x < min || x > max -> invalidArg name "Argument out of range."
             | _ -> ignore 0
 
         validateString config.KillSourceUri CommandLine.killSourceUriArg
@@ -50,7 +50,7 @@ module Program=
         validateString config.KillsDbCollection CommandLine.dbKillsCollectionArg
         validateString config.SessionsDbCollection CommandLine.dbSessionCollectionArg
 
-        validateValue config.LiveBufferSize CommandLine.liveBufferSizeArg 0 10000
+        validateValue config.BufferSize CommandLine.liveBufferSizeArg 0 1000000
         validateValue config.WebServerPort CommandLine.webPortArg 80us 65535us
         
         config

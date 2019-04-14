@@ -170,7 +170,7 @@ type KillProviderActor(log: PostMessage, stats: PostMessage, config: Configurati
             return! loop(newCache)
         }
                 
-        loop({ KillCache.Empty config.LiveBufferSize with LastPull = DateTime.UtcNow })
+        loop({ KillCache.Empty config.BufferSize with LastPull = DateTime.UtcNow })
     )
 
     do pipe.Error.Add(logException)

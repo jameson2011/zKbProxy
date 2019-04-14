@@ -17,7 +17,7 @@ module CommandLine=
     let dbUserArg = "un"
     let dbPasswordArg = "pw"
     let webPortArg = "port"
-    let liveBufferSizeArg = "live"
+    let liveBufferSizeArg = "buffer"
     let noCacheArg = "nocache"
     let sessionTimeoutArg = "sessiontimeout"
 
@@ -125,7 +125,7 @@ module CommandLine=
             | (true,x) -> Some x
             | _ -> None             
     
-    let addLiveBufferSizeArg =          addSingleOption liveBufferSizeArg "livebuffer" ("The maximum count of live stream buffers. Default: " + ConfigurationDefaults.LiveBufferSize.ToString())
+    let addLiveBufferSizeArg =          addSingleOption liveBufferSizeArg liveBufferSizeArg ("The maximum kill count of stream buffers. Default: " + ConfigurationDefaults.BufferSize.ToString())
     let getLiveBufferSizeValue app =    
         match getStringOption liveBufferSizeArg app with
         | None -> None

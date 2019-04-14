@@ -20,7 +20,7 @@
         [<Literal>]
         let WebServerPort = 80us
         [<Literal>]
-        let LiveBufferSize = 2000
+        let BufferSize = 2000
         [<Literal>]
         let DefaultTtl = 10
         let SessionTimeout = TimeSpan.FromMinutes(180.);
@@ -36,7 +36,7 @@
             MongoUserName: string;
             MongoPassword: string;
             WebServerPort: uint16;
-            LiveBufferSize: int32;
+            BufferSize: int32;
             SessionTimeout: TimeSpan;
         }
         with             
@@ -51,7 +51,7 @@
                     MongoUserName = ConfigurationDefaults.UserName; 
                     MongoPassword = ConfigurationDefaults.UserPassword;
                     WebServerPort = ConfigurationDefaults.WebServerPort; 
-                    LiveBufferSize = ConfigurationDefaults.LiveBufferSize;
+                    BufferSize = ConfigurationDefaults.BufferSize;
                     SessionTimeout = ConfigurationDefaults.SessionTimeout
                 }
 

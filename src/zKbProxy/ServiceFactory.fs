@@ -12,7 +12,7 @@
                 sprintf "Sessions collection: %s" config.SessionsDbCollection;
                 sprintf "Kill source:         %s" config.KillSourceUri;
                 sprintf "No Caching:          %b" config.NoCache;
-                sprintf "Live buffer size:    %d" config.LiveBufferSize;
+                sprintf "buffer size:         %i" config.BufferSize;
                 sprintf "Session timeout:     %f" config.SessionTimeout.TotalMinutes;
             ] 
             |> Strings.join System.Environment.NewLine

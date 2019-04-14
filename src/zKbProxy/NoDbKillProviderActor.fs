@@ -79,7 +79,7 @@ type NoDbKillProviderActor(log: PostMessage, stats: PostMessage, config: Configu
             return! loop(newCache)
         }
 
-        loop(KillCache.Empty config.LiveBufferSize)
+        loop(KillCache.Empty config.BufferSize)
     )
 
     do pipe.Error.Add(logException)
