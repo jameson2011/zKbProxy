@@ -17,13 +17,13 @@ module CommandLine=
     let dbUserArg = "un"
     let dbPasswordArg = "pw"
     let webPortArg = "port"
-    let liveBufferSizeArg = "buffer"
+    let bufferSizeArg = "buffer"
     let noCacheArg = "nocache"
     let sessionTimeoutArg = "sessiontimeout"
 
     let private longestArg = 
         [ killSourceUriArg; dbServerArg; dbNameArg; dbKillsCollectionArg; dbSessionCollectionArg;
-            dbUserArg; dbPasswordArg; webPortArg; liveBufferSizeArg; noCacheArg; 
+            dbUserArg; dbPasswordArg; webPortArg; bufferSizeArg; noCacheArg; 
             sessionTimeoutArg; ]
         |> Seq.map String.length
         |> Seq.max
@@ -125,9 +125,9 @@ module CommandLine=
             | (true,x) -> Some x
             | _ -> None             
     
-    let addLiveBufferSizeArg =          addSingleOption liveBufferSizeArg liveBufferSizeArg ("The maximum kill count of stream buffers. Default: " + ConfigurationDefaults.BufferSize.ToString())
+    let addLiveBufferSizeArg =          addSingleOption bufferSizeArg bufferSizeArg ("The maximum kill count of stream buffers. Default: " + ConfigurationDefaults.BufferSize.ToString())
     let getLiveBufferSizeValue app =    
-        match getStringOption liveBufferSizeArg app with
+        match getStringOption bufferSizeArg app with
         | None -> None
         | Some x -> 
             match Int32.TryParse(x) with

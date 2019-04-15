@@ -12,7 +12,7 @@ open System.Runtime.InteropServices
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
 [<assembly: AssemblyProduct("RedisqProxy")>]
-[<assembly: AssemblyCopyright("Copyright © Jameson2011 2018")>]
+[<assembly: AssemblyCopyright("Copyright © Jameson2011 2019")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
 

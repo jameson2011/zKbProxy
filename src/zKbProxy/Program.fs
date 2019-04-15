@@ -50,7 +50,7 @@ module Program=
         validateString config.KillsDbCollection CommandLine.dbKillsCollectionArg
         validateString config.SessionsDbCollection CommandLine.dbSessionCollectionArg
 
-        validateValue config.BufferSize CommandLine.liveBufferSizeArg 0 1000000
+        validateValue config.BufferSize CommandLine.bufferSizeArg 0 1000000
         validateValue config.WebServerPort CommandLine.webPortArg 80us 65535us
         
         config
