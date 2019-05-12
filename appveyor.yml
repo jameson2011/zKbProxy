@@ -12,6 +12,7 @@ assembly_info:
   
 # tasks
 before_build:
+- ps: ./.tools/discord/sendwebhook.ps1 start $env:WEBHOOK_URL
 - cmd: .paket\paket.exe restore
 
 build_script:
