@@ -53,27 +53,36 @@ type ZkbSourceActor(log: PostMessage, forward: PostMessage)=
         }
         
     let pipe = MessageInbox.Start(fun inbox ->
-        let rec loop() = async{
+        let rec loop(canSend) = async{
             
             let! msg = inbox.Receive()
 
-            match msg with
-            | Stop ->   
-                "Stopped kill source." |>  logInfo
+            let! canSend = 
+                match msg with
+                | Stop ->                   async {
+                                                "Stopped kill source." |>  logInfo
+                                                return false
+                                                }
                     
-            | GetNextKillFromSource (url,wait) ->
-                let! w = Async.Sleep((int wait.TotalMilliseconds))                                                
-                try
-                    do! onNext inbox url 
-                with ex -> 
-                    logException ex
-            | Ping ch ->                ignore 0 |> ch.Reply
-            | _ ->                      ignore 0
+                | GetNextKillFromSource (url,wait) when canSend ->
+                                            async {
+                                                let! w = Async.Sleep((int wait.TotalMilliseconds))                                                
+                                                try
+                                                    do! onNext inbox url 
+                                                with ex -> 
+                                                    logException ex
+                                                return canSend
+                                                }
+                | Ping ch ->                async { 
+                                                ignore 0 |> ch.Reply
+                                                return canSend
+                                                }
+                | _ ->                      async { return canSend } 
 
-            return! loop()
+            return! loop(canSend)
         }
 
-        loop()
+        loop(true)
     )
 
     do pipe.Error.Add(logException)
