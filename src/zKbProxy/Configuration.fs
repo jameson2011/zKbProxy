@@ -20,7 +20,7 @@
         [<Literal>]
         let WebServerPort = 80us
         [<Literal>]
-        let BufferSize = 2000
+        let BufferSize = 100000
         [<Literal>]
         let DefaultTtl = 10
         let SessionTimeout = TimeSpan.FromMinutes(180.);

@@ -28,7 +28,7 @@ module Program=
                  WebServerPort = CommandLine.getWebServerPortValue app 
                                         |> Option.defaultValue 80us;
                  BufferSize = CommandLine.getLiveBufferSizeValue app 
-                                        |> Option.defaultValue 2000;
+                                        |> Option.defaultValue ConfigurationDefaults.BufferSize;
                  NoCache = CommandLine.getNoCacheValue app;
                  SessionTimeout = CommandLine.getSessionTimeoutArg app;
         }   
@@ -63,7 +63,7 @@ module Program=
         let ctsWeb = new CancellationTokenSource()
         let services = ServiceFactory(config)
         let logger = services.Logger
-        let logInfo msg = ActorMessage.Info ("Proxy", msg) |> logger.Post
+        let logInfo msg = ActorMessage.Info ("zKbProxy", msg) |> logger.Post
         let source = services.Source :> IActor
         
         let statsProvider = services.StatisticsProvider 
