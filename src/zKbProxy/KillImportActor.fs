@@ -34,7 +34,9 @@
                                     | _ -> "Unrecognised message received" |> msgSource |> ActorMessage.Warning
                         
                         msg |> log
-                    | _ -> ignore 0
+                    | Stop ->                   "Stopped kill importer." |>  logInfo
+                    | Ping ch ->                ignore 0 |> ch.Reply
+                    | _ ->                      ignore 0
                 with ex -> logException ex
 
                 return! loop()
@@ -48,3 +50,4 @@
         interface IActor with
             member __.Post(msg) = pipe.Post msg
             member __.Request(msg) = pipe.PostAndAsyncReply (fun ch -> msg)
+            member __.Ping() = pipe.PostAndAsyncReply (fun ch -> Ping ch)

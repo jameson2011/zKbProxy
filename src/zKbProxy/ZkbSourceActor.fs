@@ -67,7 +67,8 @@ type ZkbSourceActor(log: PostMessage, forward: PostMessage)=
                     do! onNext inbox url 
                 with ex -> 
                     logException ex
-            | _ -> ignore 0
+            | Ping ch ->                ignore 0 |> ch.Reply
+            | _ ->                      ignore 0
 
             return! loop()
         }
@@ -80,3 +81,4 @@ type ZkbSourceActor(log: PostMessage, forward: PostMessage)=
     interface IActor with            
         member __.Post(msg) = pipe.Post msg
         member __.Request(msg) = pipe.PostAndAsyncReply (fun ch -> msg)
+        member __.Ping() = pipe.PostAndAsyncReply (fun ch -> Ping ch)

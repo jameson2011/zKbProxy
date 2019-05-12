@@ -164,6 +164,8 @@ type KillProviderActor(log: PostMessage, stats: PostMessage, config: Configurati
                                                     async { return { cache with LastObjectId = None; Cycled = false; } }
                     | GetLastPull ch ->             cache.LastPull |> ch.Reply
                                                     async { return cache }
+                    | Ping ch ->                    async { ignore 0 |> ch.Reply
+                                                            return cache }
                     | _ ->                          async { return cache }
                 with e ->                           async { logException e; return cache }                                
 
@@ -200,6 +202,7 @@ type KillProviderActor(log: PostMessage, stats: PostMessage, config: Configurati
     interface IActor with            
         member __.Post(msg) = pipe.Post msg
         member __.Request(msg) = pipe.PostAndAsyncReply (fun ch -> msg)
+        member __.Ping() = pipe.PostAndAsyncReply (fun ch -> Ping ch)
 
         
         

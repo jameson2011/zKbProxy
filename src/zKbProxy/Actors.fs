@@ -33,6 +33,7 @@
         | PurgeExpiredSessions
         | SessionPurged of string
         | GetLastPull of AsyncReplyChannel<DateTime>
+        | Ping of AsyncReplyChannel<unit>
 
     type MessageInbox = MailboxProcessor<ActorMessage>
     type PostMessage = ActorMessage -> unit
@@ -40,6 +41,7 @@
     type IActor =
         abstract member Post: ActorMessage -> unit
         abstract member Request: ActorMessage -> Async<'a>
+        abstract member Ping: unit -> Async<unit>
 
     module Actors =        
         [<Literal>]

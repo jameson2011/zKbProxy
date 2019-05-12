@@ -25,6 +25,7 @@
         let postLog = logActor.Post
         do reportConfig postLog config |> ignore
 
+        let importActor = KillImportActor(postLog, config) :> IActor
 
         let statsActor = StatisticsActor(postLog) 
         let postStats = (statsActor :> IActor).Post
@@ -42,10 +43,9 @@
                             | true ->   Actors.broadcast [  (killProvider :?> IActor).Post; 
                                                             (sessionProvider :> IActor).Post; 
                                                             postStats ]
-                            | _ ->      let dumpActor = KillImportActor(postLog, config) :> IActor
-                                        Actors.broadcast [  (killProvider :?> IActor).Post; 
+                            | _ ->      Actors.broadcast [  (killProvider :?> IActor).Post; 
                                                             (sessionProvider :> IActor).Post; 
-                                                            dumpActor.Post; postStats ]
+                                                            importActor.Post; postStats ]
 
         let killSource = ZkbSourceActor(postLog, sourceForward)
 
@@ -64,6 +64,8 @@
         member __.SessionProvider = sessionProvider
 
         member __.Logger = logActor
+
+        member __.Importer = importActor
 
         member __.StatisticsProvider = 
             initializeStats() |> Async.RunSynchronously |> ignore

@@ -106,6 +106,8 @@ type SessionProviderActor(log: PostMessage, stats: PostMessage, config: Configur
                                                         Actors.broadcast providers msg
                                                         async { return cache }
                         | PurgeExpiredSessions _ ->     async { return purgeSessions cache }
+                        | Ping ch ->                    ignore 0 |> ch.Reply
+                                                        async { return cache }
                         | _ ->                          async { return cache }
                     with e ->                           async { logException e; return cache }                                
 
@@ -129,4 +131,5 @@ type SessionProviderActor(log: PostMessage, stats: PostMessage, config: Configur
     interface IActor with            
         member __.Post(msg) = pipe.Post msg
         member __.Request(msg) = pipe.PostAndAsyncReply (fun ch -> msg)
+        member __.Ping() = pipe.PostAndAsyncReply (fun ch -> Ping ch)
 

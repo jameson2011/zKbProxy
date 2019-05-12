@@ -5,14 +5,14 @@ open ZkbProxy
 open Suave
 open ZkbProxy.CommandLine
 open ZkbProxy.Strings
+open System.Threading
 
 module Program=
-
+    
     let private configFromStartApp(app: CommandLine.App)=        
         {   Configuration.empty with
                  KillSourceUri = CommandLine.getKillSourceUriValue app 
                                         |> Option.defaultValue ConfigurationDefaults.KillSourceUri
-                 
                  MongoServer = CommandLine.getMongoServerValue app 
                                         |> Option.defaultValue ConfigurationDefaults.MongoServer;
                  DbName = CommandLine.getMongoDbValue app 
@@ -58,13 +58,17 @@ module Program=
 
     let private startProxy (app: CommandLine.App) =        
         let config = configFromStartApp app |> validateConfig
-        
-        let cts = new System.Threading.CancellationTokenSource()
+                
+        let cts = new CancellationTokenSource()
+        let ctsWeb = new CancellationTokenSource()
         let services = ServiceFactory(config)
         let logger = services.Logger
-        let logInfo msg = ActorMessage.Info ("", msg) |> logger.Post
+        let logInfo msg = ActorMessage.Info ("Proxy", msg) |> logger.Post
         let source = services.Source :> IActor
+        
         let statsProvider = services.StatisticsProvider 
+        let importer = services.Importer
+
 
         "Starting zKB capture..." |> logInfo
         (GetNextKillFromSource (config.KillSourceUri, TimeSpan.Zero)) |> source.Post
@@ -75,17 +79,35 @@ module Program=
 
         let listening,server = startWebServerAsync webConfig webRoutes 
 
-        Async.Start(server, cts.Token)
+        Async.Start(server, ctsWeb.Token)
         
-        Console.WriteLine("Hit Return to quit")
-        Console.ReadLine() |> ignore 
+        let shutdown() =
+            async {
+                ctsWeb.Cancel()
+                (Stop) |> source.Post
+                (Stop) |> importer.Post
+                let! _ = source.Ping()
+                let! _ = importer.Ping()
+                let! _ = logger.Ping()
+                
+                return true
+            }
 
-        "Shutting down..." |> logInfo
-
-        cts.Cancel()
-
-        (Stop) |> source.Post
+        Console.WriteLine("Proxy started. Hit CTRL-C to quit")
+        Console.CancelKeyPress.Add(fun x -> 
+            "Shutting down services..." |> logInfo
+            
+            let _ = shutdown() |> Async.RunSynchronously
+            Console.Out.WriteLine("Services shutdown")
+            
+            cts.Cancel()
+            
+            )
         
+        WaitHandle.WaitAll( [| cts.Token.WaitHandle |] ) |> ignore
+        
+        
+        Console.Out.WriteLine("Done")
         true
 
     let private createAppTemplate()=

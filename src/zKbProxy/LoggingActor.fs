@@ -29,6 +29,7 @@
                 | Exception (source, ex) -> logException source ex               
                 | Info (source, msg) ->     ("[" + source + "]: " + msg) |> logInfo
                 | Trace (source, msg) ->    ("[" + source + "]: " + msg) |> logTrace
+                | Ping ch ->                ignore 0 |> ch.Reply
                 | _ ->                      ignore 0
 
                 return! loop()
@@ -40,3 +41,4 @@
         interface IActor with
             member __.Post(msg) = pipe.Post msg
             member __.Request(msg) = pipe.PostAndAsyncReply (fun ch -> msg)
+            member __.Ping() = pipe.PostAndAsyncReply (fun ch -> Ping ch)

@@ -28,6 +28,9 @@
                                 | SessionPurged x -> 
                                     let map = stats.SessionStreamStatistics |> Map.remove x
                                     { stats with SessionStreamStatistics = map }
+                                | Ping ch ->                
+                                    ignore 0 |> ch.Reply
+                                    stats
                                 | _ -> stats
 
                 return! loop(newStats)
@@ -44,3 +47,4 @@
         interface IActor with
             member __.Post(msg) = pipe.Post msg
             member __.Request(msg) = pipe.PostAndAsyncReply (fun ch -> msg)
+            member __.Ping() = pipe.PostAndAsyncReply (fun ch -> Ping ch)
