@@ -7,15 +7,21 @@
         let msgSource = Actors.messageSource typeof<KillImportActor>.Name        
         let logException (ex: Exception) = ex.Message |> msgSource |> ActorMessage.Error |> log
         let logInfo = msgSource >> ActorMessage.Info >> log
-        let dbCollection = 
-            sprintf "Initialising DB connection to %s %s.%s..." config.MongoServer config.DbName config.KillsDbCollection |> logInfo
-            MongoDb.killsCollection config.MongoServer config.DbName config.KillsDbCollection config.MongoUserName config.MongoPassword
-
+        
+        
         let insertOne (col: IMongoCollection<Object>) doc =
             col.InsertOne(doc)
 
-        let write = insertOne dbCollection
-        
+        let write = 
+            if not config.NoCache then  
+                let dbCollection = 
+                    sprintf "Initialising DB connection to %s %s.%s..." config.MongoServer config.DbName config.KillsDbCollection |> logInfo
+                    MongoDb.killsCollection config.MongoServer config.DbName config.KillsDbCollection config.MongoUserName config.MongoPassword
+
+                insertOne dbCollection
+            else    
+                ignore
+
         let pipe = MessageInbox.Start(fun inbox ->
             let rec loop() = async{
             
