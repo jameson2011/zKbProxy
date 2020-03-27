@@ -26,18 +26,21 @@ type ZkbSourceActor(log: PostMessage, forward: PostMessage)=
 
             let waitTime = match resp.Status with
                                 | HttpStatus.OK ->                 
-                                    match resp.Message with
-                                    | @"{""package"":null}" -> "No data received from zKb." |> logTrace
-                                    | json ->   
-                                                let tracemsg = match getKillId json with
-                                                                | Some id -> 
-                                                                        match addOrIgnore id with
-                                                                        | true ->   ActorMessage.KillJson json |> forward
-                                                                                    (sprintf "KillID %s received from source." id)
-                                                                        | _ ->  sprintf "KillID %s ignored as a duplicate" id
-                                                                | _ -> "Unrecognised message (no killID) receive from source."
+                                    try
+                                        match resp.Message with
+                                        | "" 
+                                        | @"{""package"":null}" -> "No data received from zKb." |> logTrace
+                                        | json ->   
+                                                    let tracemsg = match getKillId json with
+                                                                    | Some id -> 
+                                                                            match addOrIgnore id with
+                                                                            | true ->   ActorMessage.KillJson json |> forward
+                                                                                        (sprintf "KillID %s received from source." id)
+                                                                            | _ ->  sprintf "KillID %s ignored as a duplicate" id
+                                                                    | _ -> "Unrecognised message (no killID) receive from source."
 
-                                                tracemsg |> logInfo
+                                                    tracemsg |> logInfo
+                                    with ex -> logException ex
                                     TimeSpan.Zero
                                 | HttpStatus.TooManyRequests -> 
                                     ActorMessage.Warning ("zKB", "zKB reported too many requests.") |> log
