@@ -29,6 +29,7 @@ type ZkbSourceActor(log: PostMessage, forward: PostMessage)=
                                     try
                                         match resp.Message with
                                         | "" 
+                                        | @"{""package"":false}"
                                         | @"{""package"":null}" -> "No data received from zKb." |> logTrace
                                         | json ->   
                                                     let tracemsg = match getKillId json with
