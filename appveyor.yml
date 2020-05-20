@@ -35,6 +35,8 @@ artifacts:
   name: zKbProxy-win-arm
 - path: publish\linux-arm
   name: zKbProxy-linux-arm
+- path: publish\linux-arm64
+  name: zKbProxy-linux-arm64
 - path: publish\ubuntu-x64
   name: zKbProxy-ubuntu-x64
 - path: publish\ubuntu-arm
