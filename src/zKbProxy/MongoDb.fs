@@ -87,9 +87,9 @@
         let setIndex (path: string) (collection: IMongoCollection<'a>) =                        
             let json = sprintf "{'%s': 1 }" path
             let def = IndexKeysDefinition<'a>.op_Implicit(json)
+            let model = CreateIndexModel<'a>(def)
+            let r = collection.Indexes.CreateOne(model)
             
-            let r = collection.Indexes.CreateOne(def)
-
             collection
         
         let getCollection colName (db: IMongoDatabase) =
@@ -113,14 +113,14 @@
             initCollection "" server dbName collectionName userName password 
 
         let upsert (collection: IMongoCollection<BsonDocument>) (doc: BsonDocument) =
-            let opts = UpdateOptions()
+            let opts = ReplaceOptions()
             opts.IsUpsert <- true
-            
             let filter = doc |> Bson.getId
                              |> idFilter |> Bson.ofJson 
                              |> FilterDefinition.op_Implicit
             collection.ReplaceOne(filter, doc, opts) |> ignore 
             
+
         let delete (collection: IMongoCollection<BsonDocument>) id =
             
             let filter = id |> idFilter |> Bson.ofJson 

@@ -39,7 +39,7 @@ type KillProviderActor(log: PostMessage, stats: PostMessage, config: Configurati
     let getKillCount()=
         async {                
             try
-                return! (dbCollection.CountAsync(fun _ -> true) |> Async.AwaitTask)
+                return! (dbCollection.CountDocumentsAsync(fun _ -> true) |> Async.AwaitTask)
             with
             | e ->  logException e
                     return 0L
