@@ -20,11 +20,12 @@ module CommandLine=
     let bufferSizeArg = "buffer"
     let noCacheArg = "nocache"
     let sessionTimeoutArg = "sessiontimeout"
+    let configArg = "config"
 
     let private longestArg = 
         [ killSourceUriArg; dbServerArg; dbNameArg; dbKillsCollectionArg; dbSessionCollectionArg;
             dbUserArg; dbPasswordArg; webPortArg; bufferSizeArg; noCacheArg; 
-            sessionTimeoutArg; ]
+            sessionTimeoutArg; configArg; ]
         |> Seq.map String.length
         |> Seq.max
 
@@ -84,6 +85,9 @@ module CommandLine=
         app.Description <- "A proxy for zKb's RedisQ service"
         app
     
+    let addConfigFileArg =              addSingleOption configArg configArg "The configuration file"
+    let getConfigFileValue app =        getStringOption configArg app
+
     let addKillSourceUriArg =           addSingleOption killSourceUriArg "killsource" "The URI providing zKB kills. By default this is zKB RedisQ"
     let getKillSourceUriValue app =     getStringOption killSourceUriArg app
 
@@ -148,6 +152,7 @@ module CommandLine=
                                     >> addLiveBufferSizeArg
                                     >> addNoCacheArg
                                     >> addSessionTimeoutArg
+                                    >> addConfigFileArg
                                     >> setAction cmd
         app.Command("run", (composeAppPipe f)) |> ignore
         app
