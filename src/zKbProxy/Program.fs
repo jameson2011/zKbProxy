@@ -9,7 +9,45 @@ open System.Threading
 
 module Program=
     
-    let private configFromStartApp(app: CommandLine.App)=        
+    open Newtonsoft.Json.Linq
+
+    let jsonToConfig(j: JObject) =
+        let toJValue (token: JToken) = token :?> JValue
+        
+        let toBool = Option.ofNull >> Option.map (toJValue >> (fun value -> value.ToObject<bool>()))
+        let toInt32 = Option.ofNull >> Option.map (toJValue >> (fun value -> value.ToObject<int32>()))
+        let toUint16 = Option.ofNull >> Option.map (toJValue >> (fun value -> value.ToObject<uint16>()))
+        let toString = Option.ofNull >> Option.map (toJValue >> (fun value -> value.ToObject<string>()))
+        let toTimeSpan = Option.ofNull >> Option.map (toJValue >> (fun value -> value.ToObject<TimeSpan>()))
+        let defaultConfig = Configuration.empty
+
+        { Configuration.KillSourceUri = j.["killSourceUri"] |> toString |> Option.defaultValue defaultConfig.KillSourceUri;
+            NoCache =                   j.["noCache"] |> toBool |> Option.defaultValue defaultConfig.NoCache;
+            MongoServer =               j.["mongoServer"] |> toString |> Option.defaultValue defaultConfig.MongoServer;
+            DbName =                    j.["dbName"] |> toString |> Option.defaultValue defaultConfig.DbName;
+            KillsDbCollection =         j.["killsDbCollection"] |> toString |> Option.defaultValue defaultConfig.KillsDbCollection;
+            SessionsDbCollection =      j.["sessionsDbCollection"] |> toString |> Option.defaultValue defaultConfig.SessionsDbCollection;
+            MongoUserName =             j.["mongoUserName"] |> toString |> Option.defaultValue defaultConfig.MongoUserName;
+            MongoPassword =             j.["mongoPassword"] |> toString |> Option.defaultValue defaultConfig.MongoPassword;
+            WebServerPort =             j.["webServerPort"] |> toUint16 |> Option.defaultValue defaultConfig.WebServerPort;
+            BufferSize =                j.["bufferSize"] |> toInt32 |> Option.defaultValue defaultConfig.BufferSize;
+            SessionTimeout =            j.["sessionTimeout"] |> toTimeSpan |> Option.defaultValue defaultConfig.SessionTimeout;
+        }
+
+
+
+    let private configFromFile(filePath: string) =
+        
+        if not <| System.IO.File.Exists(filePath) then
+            let msg = filePath |> sprintf "The configuration file %s was not found."
+            raise (System.IO.FileNotFoundException(msg))
+        
+        filePath 
+            |> System.IO.File.ReadAllText 
+            |> JObject.Parse
+            |> jsonToConfig
+
+    let private configFromCmdLine(app: CommandLine.App)=        
         {   Configuration.empty with
                  KillSourceUri = CommandLine.getKillSourceUriValue app 
                                         |> Option.defaultValue ConfigurationDefaults.KillSourceUri
@@ -32,6 +70,12 @@ module Program=
                  NoCache = CommandLine.getNoCacheValue app;
                  SessionTimeout = CommandLine.getSessionTimeoutArg app;
         }   
+
+    let private configFromStartApp(app: CommandLine.App)=        
+        app 
+            |> CommandLine.getConfigFileValue
+            |> Option.map configFromFile 
+            |> Option.defaultWith (fun () -> configFromCmdLine app)
         
     let private validateConfig (config: Configuration) = 
         let validateString value name  =            
