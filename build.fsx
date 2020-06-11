@@ -66,12 +66,9 @@ let publishAndCopy runtime =
 
     Shell.copyDir targetDir sourceDir (fun _ -> true)
 
-Target.create "PublishRuntime-ubuntu-arm" (fun _ -> publishAndCopy "ubuntu-arm")
 Target.create "PublishRuntime-ubuntu-arm64" (fun _ -> publishAndCopy "ubuntu-arm64")
 Target.create "PublishRuntime-ubuntu-x64" (fun _ -> publishAndCopy "ubuntu-x64")
 Target.create "PublishRuntime-win-x86" (fun _ -> publishAndCopy "win-x86")
-Target.create "PublishRuntime-win-arm" (fun _ -> publishAndCopy "win-arm")
-Target.create "PublishRuntime-linux-arm" (fun _ -> publishAndCopy "linux-arm")
 Target.create "PublishRuntime-linux-arm64" (fun _ -> publishAndCopy "linux-arm64")
 
 
@@ -79,12 +76,9 @@ Target.create "All" ignore
 
 "Clean"
   ==> "Build"
-  ==> "PublishRuntime-ubuntu-arm"
   ==> "PublishRuntime-ubuntu-arm64"
   ==> "PublishRuntime-ubuntu-x64"
   ==> "PublishRuntime-win-x86"
-  ==> "PublishRuntime-win-arm"
-  ==> "PublishRuntime-linux-arm"
   ==> "PublishRuntime-linux-arm64"
   ==> "All"
 
