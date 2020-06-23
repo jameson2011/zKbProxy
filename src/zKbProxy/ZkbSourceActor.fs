@@ -49,6 +49,12 @@ type ZkbSourceActor(log: PostMessage, forward: PostMessage)=
                                 | HttpStatus.Unauthorized -> 
                                     ActorMessage.Warning ("zKB", "zKB reported unauthorized.") |> log
                                     standoffWait
+                                | HttpStatus.Forbidden -> 
+                                    ActorMessage.Warning ("zKB", "zKB reported forbidden.") |> log
+                                    standoffWait
+                                | HttpStatus.NotFound -> 
+                                    ActorMessage.Warning ("zKB", "zKB reported not found.") |> log
+                                    standoffWait
                                 | HttpStatus.Error ->                                         
                                     ActorMessage.Error ("zKB", resp.Message) |> log
                                     standoffWait

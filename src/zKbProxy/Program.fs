@@ -119,7 +119,7 @@ module Program=
 
         "Starting web app..." |> logInfo
         let webConfig = WebApp.webConfig (WebLogger logger.Post) config.WebServerPort
-        let webRoutes = WebApp.webRoutes logger.Post services.SessionProvider statsProvider
+        let webRoutes = WebApp.webRoutes logger.Post services.SessionProvider statsProvider services.ZkbApi
 
         let listening,server = startWebServerAsync webConfig webRoutes 
 

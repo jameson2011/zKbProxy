@@ -26,6 +26,7 @@
         do reportConfig postLog config |> ignore
 
         let importActor = KillImportActor(postLog, config) :> IActor
+        let zkbApiPassthrough = ZkbApiPassthroughActor(postLog)
 
         let statsActor = StatisticsActor(postLog) 
         let postStats = (statsActor :> IActor).Post
@@ -71,4 +72,5 @@
             initializeStats() |> Async.RunSynchronously |> ignore
             statsActor 
 
+        member __.ZkbApi = zkbApiPassthrough
         

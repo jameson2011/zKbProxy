@@ -184,3 +184,17 @@ module WebServices=
             return! Successful.OK response ctx
         }
             
+    let zkbApiPassthrough (zkbApi: ZkbApiPassthroughActor) (path: string) (ctx: HttpContext)=
+        async {
+            
+            let! resp = zkbApi.get path
+            
+            return! match resp.Status with
+                    | HttpStatus.OK -> Successful.OK resp.Message ctx
+                    | HttpStatus.Unauthorized -> RequestErrors.UNAUTHORIZED "" ctx
+                    | HttpStatus.Forbidden -> RequestErrors.FORBIDDEN "" ctx
+                    | HttpStatus.NotFound -> RequestErrors.NOT_FOUND "" ctx
+                    | HttpStatus.TooManyRequests -> RequestErrors.TOO_MANY_REQUESTS "" ctx
+                    | HttpStatus.Error -> RequestErrors.BAD_REQUEST "" ctx
+            
+        }

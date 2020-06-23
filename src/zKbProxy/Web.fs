@@ -7,6 +7,8 @@
         | TooManyRequests
         | Unauthorized
         | Error
+        | Forbidden
+        | NotFound
             
     type WebResponse=
         {
