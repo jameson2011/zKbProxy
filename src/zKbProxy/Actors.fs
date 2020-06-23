@@ -34,6 +34,7 @@
         | SessionPurged of string
         | GetLastPull of AsyncReplyChannel<DateTime>
         | Ping of AsyncReplyChannel<unit>
+        | Get of string * AsyncReplyChannel<WebResponse>
 
     type MessageInbox = MailboxProcessor<ActorMessage>
     type PostMessage = ActorMessage -> unit

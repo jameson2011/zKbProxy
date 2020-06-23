@@ -59,7 +59,7 @@ module WebApp=
         { defaultConfig with bindings = [ HttpBinding.create HTTP System.Net.IPAddress.Any port ]; logger = logger }
 
 
-    let webRoutes (log: PostMessage) (sessionProvider: SessionProviderActor) (statsProvider: StatisticsActor) = 
+    let webRoutes (log: PostMessage) (sessionProvider: SessionProviderActor) (statsProvider: StatisticsActor) (zkbApi: ZkbApiPassthroughActor)= 
         let killProvider = sessionProvider.MainProvider()
         let logRequest = WebServices.logRouteInvoke log
         choose
@@ -99,6 +99,11 @@ module WebApp=
                             path "/stats/json/" >=> logRequest 
                                             >=> (WebServices.getStatsJson statsProvider) 
                                             >=> WebServices.jsonMimeType >=> WebServices.setNoCache
+
+                            pathScan "/zkbapi/%s" (fun path -> logRequest 
+                                                                >=> WebServices.zkbApiPassthrough zkbApi path) 
+                                                                >=> WebServices.jsonMimeType 
+                                                                >=> WebServices.setNoCache
 
                             path "/favicon.ico" >=> Suave.Successful.no_content >=> WebServices.setCache 99999999
                             ];
