@@ -62,8 +62,8 @@ type ZkbApiPassthroughActor(log: PostMessage)=
                 return!
                     match resp.Status with
                     | HttpStatus.TooManyRequests when iterations <= 0 -> 
-                        async { return { WebResponse.Status = HttpStatus.Error; Retry = None; 
-                                            Message = maxIterations |> sprintf "Retried after %i iterations, quitting." } }
+                                                    async { return { WebResponse.Status = HttpStatus.Error; Retry = None; 
+                                                                        Message = maxIterations |> sprintf "Retried after %i iterations, quitting." } }
                     | HttpStatus.TooManyRequests -> 
                                                     iterations |> sprintf "Retrying, %i iteration(s) left." |> logInfo
                                                     get url DateTime.UtcNow (iterations - 1)
