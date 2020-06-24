@@ -21,11 +21,10 @@
         open System.Net
         open System.Net.Http
 
-        let private userAgent = "zKbProxy (https://github.com/jameson2011/zKbProxy)"
-
-        let httpClient()=
+        
+        let httpClient(config: Configuration)=
             let client = new System.Net.Http.HttpClient()
-            client.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent)            
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(config.UserAgent)            
             client
 
         let getAge (response: Net.Http.HttpResponseMessage)=

@@ -4,6 +4,8 @@
 
     module ConfigurationDefaults = 
         [<Literal>]
+        let UserAgent = "zKbProxy (https://github.com/jameson2011/zKbProxy)"
+        [<Literal>]
         let KillSourceUri = "https://redisq.zkillboard.com/listen.php?ttw=10"
         [<Literal>]
         let ZkbApiBaseUri = "https://zkillboard.com/api/"
@@ -29,6 +31,7 @@
 
     type Configuration=
         {
+            UserAgent:              string;
             KillSourceUri:          string;
             ZkbApiBaseUri:          string;
             NoCache:                bool;
@@ -45,6 +48,7 @@
         with             
             static member empty = 
                 {   
+                    UserAgent =             ConfigurationDefaults.UserAgent;
                     KillSourceUri =         ConfigurationDefaults.KillSourceUri;
                     ZkbApiBaseUri =         ConfigurationDefaults.ZkbApiBaseUri;
                     NoCache =               false;

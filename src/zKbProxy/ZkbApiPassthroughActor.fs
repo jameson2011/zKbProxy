@@ -17,7 +17,7 @@ type ZkbApiPassthroughActor(config: Configuration, log: PostMessage)=
     let logGetRequest (path: string) =              sprintf "Sending GET %s" path |> logInfo
     let logGetResp (resp: HttpResponseMessage) =    sprintf "Received %A from %A" resp.StatusCode resp.RequestMessage.RequestUri |> logInfo
 
-    let httpClient = Web.httpClient()
+    let httpClient = Web.httpClient(config)
     let zkbBaseUri =    if config.ZkbApiBaseUri.EndsWith("/") then config.ZkbApiBaseUri
                         else config.ZkbApiBaseUri + "/"
 

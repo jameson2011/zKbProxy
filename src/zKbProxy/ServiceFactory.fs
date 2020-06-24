@@ -49,7 +49,7 @@
                                                             (sessionProvider :> IActor).Post; 
                                                             importActor.Post; postStats ]
 
-        let killSource = ZkbSourceActor(postLog, sourceForward)
+        let killSource = ZkbSourceActor(config, postLog, sourceForward)
 
         let initializeStats() =
             async {

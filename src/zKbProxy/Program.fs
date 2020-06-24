@@ -23,6 +23,7 @@ module Program=
 
         { Configuration.KillSourceUri = j.["killSourceUri"] |> toString |> Option.defaultValue defaultConfig.KillSourceUri;
             ZkbApiBaseUri =             j.["zkbApiBaseUri"] |> toString |> Option.defaultValue defaultConfig.ZkbApiBaseUri;
+            UserAgent =                 j.["userAgent"] |> toString |> Option.defaultValue defaultConfig.UserAgent;
             NoCache =                   j.["noCache"] |> toBool |> Option.defaultValue defaultConfig.NoCache;
             MongoServer =               j.["mongoServer"] |> toString |> Option.defaultValue defaultConfig.MongoServer;
             DbName =                    j.["dbName"] |> toString |> Option.defaultValue defaultConfig.DbName;

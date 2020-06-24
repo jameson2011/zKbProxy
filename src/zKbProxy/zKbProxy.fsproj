@@ -13,8 +13,8 @@
     <Compile Include="Strings.fs" />
     <Compile Include="Collections.fs" />
     <Compile Include="Console.fs" />
-    <Compile Include="Web.fs" />
     <Compile Include="Configuration.fs" />
+    <Compile Include="Web.fs" />
     <Compile Include="MongoDb.fs" />
     <Compile Include="Kills.fs" />
     <Compile Include="Statistics.fs" />
