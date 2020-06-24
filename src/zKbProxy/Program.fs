@@ -22,6 +22,7 @@ module Program=
         let defaultConfig = Configuration.empty
 
         { Configuration.KillSourceUri = j.["killSourceUri"] |> toString |> Option.defaultValue defaultConfig.KillSourceUri;
+            ZkbApiBaseUri =             j.["zkbApiBaseUri"] |> toString |> Option.defaultValue defaultConfig.ZkbApiBaseUri;
             NoCache =                   j.["noCache"] |> toBool |> Option.defaultValue defaultConfig.NoCache;
             MongoServer =               j.["mongoServer"] |> toString |> Option.defaultValue defaultConfig.MongoServer;
             DbName =                    j.["dbName"] |> toString |> Option.defaultValue defaultConfig.DbName;

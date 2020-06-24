@@ -9,7 +9,7 @@ type private ZkbApiPassthroughActorState = {
 with 
     static member empty = { ZkbApiPassthroughActorState.lastZkbRequest = DateTime.MinValue }
 
-type ZkbApiPassthroughActor(log: PostMessage)=
+type ZkbApiPassthroughActor(config: Configuration, log: PostMessage)=
     let logSource = typeof<ZkbApiPassthroughActor>.Name
     let logException (ex: Exception) = (logSource,ex.Message) |> ActorMessage.Error |> log
     let logInfo (msg: string) = (logSource, msg) |> ActorMessage.Info |> log
@@ -18,9 +18,8 @@ type ZkbApiPassthroughActor(log: PostMessage)=
     let logGetResp (resp: HttpResponseMessage) =    sprintf "Received %A from %A" resp.StatusCode resp.RequestMessage.RequestUri |> logInfo
 
     let httpClient = Web.httpClient()
-
-    [<Literal>]
-    let zkbDomain = "https://zkillboard.com/api"
+    let zkbBaseUri =    if config.ZkbApiBaseUri.EndsWith("/") then config.ZkbApiBaseUri
+                        else config.ZkbApiBaseUri + "/"
 
     let getResponseString(resp: HttpResponseMessage)= resp.Content.ReadAsStringAsync() |> Async.AwaitTask |> Async.RunSynchronously
 
@@ -71,9 +70,9 @@ type ZkbApiPassthroughActor(log: PostMessage)=
                     
             }
 
-        let domain =    if path.StartsWith("/") then    zkbDomain
-                        else                            zkbDomain + "/"
-        let uri = sprintf "%s%s" domain path
+        let path =  if path.StartsWith("/") then    path.Substring(1)
+                    else                            path
+        let uri = sprintf "%s%s" zkbBaseUri path
 
         get uri lastZkbRequest maxIterations
 
