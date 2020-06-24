@@ -9,18 +9,17 @@ type private ZkbApiPassthroughActorState = {
 with 
     static member empty = { ZkbApiPassthroughActorState.lastZkbRequest = DateTime.MinValue }
 
-type ZkbApiPassthroughActor(log: PostMessage)=
+type ZkbApiPassthroughActor(config: Configuration, log: PostMessage)=
     let logSource = typeof<ZkbApiPassthroughActor>.Name
     let logException (ex: Exception) = (logSource,ex.Message) |> ActorMessage.Error |> log
     let logInfo (msg: string) = (logSource, msg) |> ActorMessage.Info |> log
-
+    
     let logGetRequest (path: string) =              sprintf "Sending GET %s" path |> logInfo
     let logGetResp (resp: HttpResponseMessage) =    sprintf "Received %A from %A" resp.StatusCode resp.RequestMessage.RequestUri |> logInfo
 
     let httpClient = Web.httpClient()
-
-    [<Literal>]
-    let zkbDomain = "https://zkillboard.com/api"
+    let zkbBaseUri =    if config.ZkbApiBaseUri.EndsWith("/") then config.ZkbApiBaseUri
+                        else config.ZkbApiBaseUri + "/"
 
     let getResponseString(resp: HttpResponseMessage)= resp.Content.ReadAsStringAsync() |> Async.AwaitTask |> Async.RunSynchronously
 
@@ -39,26 +38,44 @@ type ZkbApiPassthroughActor(log: PostMessage)=
                                 | System.Net.HttpStatusCode.NotFound -> { WebResponse.Status = HttpStatus.NotFound; Retry = None; Message = "" }
                                 | System.Net.HttpStatusCode.TooManyRequests -> { WebResponse.Status = HttpStatus.TooManyRequests; Retry = None; Message = "" }
                                 | System.Net.HttpStatusCode.Forbidden -> { WebResponse.Status = HttpStatus.Forbidden; Retry = None; Message = "" }
-                                | _ -> { WebResponse.Status = HttpStatus.Error; Retry = None; Message = "" }
+                                | _ -> { WebResponse.Status = HttpStatus.Error; Retry = None; Message = "Unknown error." }
                             
                 return result
             with
             | ex -> logException ex     
-                    return { WebResponse.Status = HttpStatus.Error; Retry = None; Message = "" }
+                    return { WebResponse.Status = HttpStatus.Error; Retry = None; Message = ex.Message }
         }
 
     let getZkbApi (path: string) (lastZkbRequest: DateTime) =
-        async {
-            let diff = DateTime.UtcNow - lastZkbRequest
-            if diff < TimeSpan.FromSeconds(1.) then
-                diff |> sprintf "Last Zkb API request in %A: pausing." |> logInfo
-                do! Async.Sleep(1000)
-            
-            let domain =    if path.StartsWith("/") then    zkbDomain
-                            else                            zkbDomain + "/"
-            
-            return! sprintf "%s%s" domain path |> getAsync
+        let maxIterations = 10
+
+        let rec get (url: string) (lastZkbRequest: DateTime) iterations =
+            async {
+                let diff = DateTime.UtcNow - lastZkbRequest
+                if diff < TimeSpan.FromSeconds(1.) then
+                    diff |> sprintf "Last Zkb API request in %A: pausing." |> logInfo
+                    do! Async.Sleep(1000)
+                           
+                let! resp = getAsync url
+         
+                return!
+                    match resp.Status with
+                    | HttpStatus.TooManyRequests when iterations <= 0 -> 
+                                                    async { return { WebResponse.Status = HttpStatus.Error; Retry = None; 
+                                                                        Message = maxIterations |> sprintf "Retried after %i iterations, quitting." } }
+                    | HttpStatus.TooManyRequests -> 
+                                                    iterations |> sprintf "Retrying, %i iteration(s) left." |> logInfo
+                                                    get url DateTime.UtcNow (iterations - 1)
+                    | _ ->        async { return resp }
+                    
             }
+
+        let path =  if path.StartsWith("/") then    path.Substring(1)
+                    else                            path
+        let uri = sprintf "%s%s" zkbBaseUri path
+
+        get uri lastZkbRequest maxIterations
+
 
     let pipe = MessageInbox.Start(fun inbox ->
         let rec loop(state: ZkbApiPassthroughActorState) = async{           

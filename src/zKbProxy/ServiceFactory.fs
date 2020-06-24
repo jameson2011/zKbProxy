@@ -11,6 +11,7 @@
                 sprintf "Kills collection:    %s" config.KillsDbCollection;
                 sprintf "Sessions collection: %s" config.SessionsDbCollection;
                 sprintf "Kill source:         %s" config.KillSourceUri;
+                sprintf "Zkb Api base:        %s" config.ZkbApiBaseUri;
                 sprintf "No Caching:          %b" config.NoCache;
                 sprintf "buffer size:         %i" config.BufferSize;
                 sprintf "Session timeout:     %f" config.SessionTimeout.TotalMinutes;
@@ -26,7 +27,7 @@
         do reportConfig postLog config |> ignore
 
         let importActor = KillImportActor(postLog, config) :> IActor
-        let zkbApiPassthrough = ZkbApiPassthroughActor(postLog)
+        let zkbApiPassthrough = ZkbApiPassthroughActor(config, postLog)
 
         let statsActor = StatisticsActor(postLog) 
         let postStats = (statsActor :> IActor).Post
