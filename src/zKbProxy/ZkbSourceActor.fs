@@ -2,13 +2,13 @@
 
 open System
     
-type ZkbSourceActor(log: PostMessage, forward: PostMessage)=
+type ZkbSourceActor(config: Configuration, log: PostMessage, forward: PostMessage)=
     let msgSource = Actors.messageSource typeof<ZkbSourceActor>.Name
     let logInfo = msgSource >> ActorMessage.Info >> log
     let logException (ex: Exception) =  ex.Message |> msgSource |> ActorMessage.Error |> log
     let logTrace = msgSource >> ActorMessage.Trace >> log
     let standoffWait = TimeSpan.FromSeconds(60.)
-    let httpClient = Web.httpClient()
+    let httpClient = Web.httpClient(config)
     let getData = Web.getData httpClient    
     let getKillId = Bson.ofJson >> Kills.getKillId
         

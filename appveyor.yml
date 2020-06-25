@@ -27,19 +27,11 @@ on_failure:
 test: off
 
 artifacts:
-- path: artifacts
-  name: zKbProxy
 - path: publish\win-x86
   name: zKbProxy
-- path: publish\win-arm
-  name: zKbProxy-win-arm
-- path: publish\linux-arm
-  name: zKbProxy-linux-arm
 - path: publish\linux-arm64
   name: zKbProxy-linux-arm64
 - path: publish\ubuntu-x64
   name: zKbProxy-ubuntu-x64
-- path: publish\ubuntu-arm
-  name: zKbProxy-ubuntu-arm
 - path: publish\ubuntu-arm64
   name: zKbProxy-ubuntu-arm64
