@@ -1,4 +1,12 @@
-#load ".fake/build.fsx/intellisense.fsx"
+#r "paket:
+nuget Fake.IO.FileSystem
+nuget Fake.DotNet.Cli
+nuget Fake.DotNet.MSBuild
+nuget Fake.BuildServer.GitHubActions
+nuget Fake.Core.Target //"
+#if !FAKE
+  #load "./.fake/fakebuild.fsx/intellisense.fsx"
+#endif
 
 open Fake.Core
 open Fake.DotNet
@@ -6,7 +14,7 @@ open Fake.IO
 open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
 open Fake.Core.TargetOperators
-
+open Fake.SystemHelper
 
 let buildDir = "./artifacts"
 let publishDir = "publish"
@@ -54,32 +62,30 @@ Target.create "Pack" (fun _ -> publishProjects |> Seq.iter (DotNet.pack packOpti
 
 Target.create "Publish" (fun _ -> publishProjects |> Seq.iter (DotNet.publish publishOptions ) )
 
-Target.create "CopyPublication" (fun _ -> Shell.copyDir publishDir @"src\zKbProxy\bin\Release\netcoreapp2.2\publish" (fun _ -> true) )
+Target.create "CopyPublication" (fun _ -> Shell.copyDir publishDir @"src/zKbProxy/bin/Release/netcoreapp3.1/publish" (fun _ -> true) )
 
 
 let publishAndCopy runtime =
     publishProjects
         |> Seq.iter (fun p -> p |> DotNet.publish (publishOptionsByRuntime runtime)) 
                                       
-    let sourceDir = sprintf @"src\zKbProxy\bin\Release\netcoreapp2.2\%s\publish" runtime
-    let targetDir = sprintf @".\%s\%s" publishDir runtime
+    let sourceDir = sprintf @"src/zKbProxy/bin/Release/netcoreapp3.1/%s/publish" runtime
+    let targetDir = sprintf @"./%s/%s" publishDir runtime
 
     Shell.copyDir targetDir sourceDir (fun _ -> true)
 
-Target.create "PublishRuntime-ubuntu-arm64" (fun _ -> publishAndCopy "ubuntu-arm64")
+
 Target.create "PublishRuntime-ubuntu-x64" (fun _ -> publishAndCopy "ubuntu-x64")
 Target.create "PublishRuntime-win-x86" (fun _ -> publishAndCopy "win-x86")
-Target.create "PublishRuntime-linux-arm64" (fun _ -> publishAndCopy "linux-arm64")
+
 
 
 Target.create "All" ignore
 
 "Clean"
   ==> "Build"
-  ==> "PublishRuntime-ubuntu-arm64"
   ==> "PublishRuntime-ubuntu-x64"
   ==> "PublishRuntime-win-x86"
-  ==> "PublishRuntime-linux-arm64"
   ==> "All"
 
 Target.runOrDefault "All"

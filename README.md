@@ -2,9 +2,11 @@
 
 A proxy & cache for zKillboard.com's Redisq service https://github.com/zKillboard/RedisQ.
 
+[![Build and Package](https://github.com/jameson2011/zKbProxy/actions/workflows/build_package.yml/badge.svg)](https://github.com/jameson2011/zKbProxy/actions/workflows/build_package.yml)
+
 ## Dependencies
 
-.NET core 2.
+.NET core 3.1.
 
 MongoDB is required for persistence, 3.2.9 is the minimum version.
 
@@ -21,10 +23,7 @@ Assuming you've got the SDKs installed, run:
 
 The SCDs are:
 * `win-x86`:       Windows x86
-* `win-arm`:       Windows on ARM *untested*
-* `linux-arm`:     Linux on ARM *untested*
 * `ubuntu-x64`:    Ubuntu on x64 *untested*
-* `ubuntu-arm`:    Ubuntu on ARM *smoke tested*
 
 ## Command line options
 
@@ -43,8 +42,4 @@ For a Linux SCD:
 ## Usage 
 
 Notes on installation, protocols and use cases can be found in the Wiki.
-
-## Builds
-
-[![Build status](https://ci.appveyor.com/api/projects/status/yeh7vtj8jasefuen?svg=true)](https://ci.appveyor.com/project/jameson2011/zkbproxy)
 

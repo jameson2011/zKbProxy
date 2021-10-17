@@ -1,0 +1,38 @@
+name: Build and Package
+
+on:
+  push:    
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Restore tools
+      run: dotnet tool restore
+
+    - name: Build
+      run: dotnet fake run "build.fsx" -t All
+    
+    - name: Archive ubuntu-x64
+      uses: actions/upload-artifact@v2
+      with:
+        name: zkbproxy-ubuntu-x64
+        path: ./publish/ubuntu-x64/*
+
+    - name: Archive win-x86
+      uses: actions/upload-artifact@v2
+      with:
+        name: zkbproxy-win-x86
+        path: ./publish/win-x86/*
+        

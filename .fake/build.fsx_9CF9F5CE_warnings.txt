@@ -1,7 +1,0 @@
-System.TypeInitializationException: The type initializer for '<StartupCode$Fake-Core-Target>.$Target' threw an exception. ---> System.IO.FileNotFoundException: Could not load file or assembly 'Fake.Core.FakeVar, Version=5.8.4.0, Culture=neutral, PublicKeyToken=null' or one of its dependencies. The system cannot find the file specified.
-   at <StartupCode$Fake-Core-Target>.$Target..cctor()
-   --- End of inner exception stack trace ---
-   at Fake.Core.TargetModule.get_getLastDescription()
-   at Fake.Core.TargetModule.addTargetWithDependencies(FSharpList`1 dependencies, FSharpFunc`2 body, String name)
-   at <StartupCode$FSI_0005>.$FSI_0005_Build$fsx.main@() in C:\Projects\GitRepos\zKbProxy\build.fsx:line 34
-Stopped due to error

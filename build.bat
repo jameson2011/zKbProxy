@@ -1,16 +1,12 @@
 @echo off
 cls
 
-
-.paket\paket.exe restore
-if errorlevel 1 (
-  exit /b %errorlevel%
-)
+dotnet tool restore
 
 
 SET TARGET="All"
 
 IF NOT [%1]==[] (set TARGET="%1")
 
+dotnet fake run "build.fsx" -t %TARGET%
 
-".\.fake\Fake.exe" run "build.fsx" -t %TARGET%
