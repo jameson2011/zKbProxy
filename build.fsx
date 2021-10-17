@@ -62,15 +62,15 @@ Target.create "Pack" (fun _ -> publishProjects |> Seq.iter (DotNet.pack packOpti
 
 Target.create "Publish" (fun _ -> publishProjects |> Seq.iter (DotNet.publish publishOptions ) )
 
-Target.create "CopyPublication" (fun _ -> Shell.copyDir publishDir @"src\zKbProxy\bin\Release\netcoreapp3.1\publish" (fun _ -> true) )
+Target.create "CopyPublication" (fun _ -> Shell.copyDir publishDir @"src/zKbProxy/bin/Release/netcoreapp3.1/publish" (fun _ -> true) )
 
 
 let publishAndCopy runtime =
     publishProjects
         |> Seq.iter (fun p -> p |> DotNet.publish (publishOptionsByRuntime runtime)) 
                                       
-    let sourceDir = sprintf @"src\zKbProxy\bin\Release\netcoreapp3.1\%s\publish" runtime
-    let targetDir = sprintf @".\%s\%s" publishDir runtime
+    let sourceDir = sprintf @"src/zKbProxy/bin/Release/netcoreapp3.1/%s/publish" runtime
+    let targetDir = sprintf @"./%s/%s" publishDir runtime
 
     Shell.copyDir targetDir sourceDir (fun _ -> true)
 
