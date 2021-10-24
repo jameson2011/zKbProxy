@@ -52,9 +52,10 @@ type ZkbApiPassthroughActor(config: Configuration, log: PostMessage)=
         let rec get (url: string) (lastZkbRequest: DateTime) iterations =
             async {
                 let diff = DateTime.UtcNow - lastZkbRequest
-                if diff < TimeSpan.FromSeconds(1.) then
-                    diff |> sprintf "Last Zkb API request in %A: pausing." |> logInfo
-                    do! Async.Sleep(1000)
+                let pause = TimeSpan.FromSeconds(1.)
+                if diff < pause then
+                    sprintf "Last Zkb API request in %A: pausing for %A..." diff pause |> logInfo
+                    do! Async.Sleep(pause)
                            
                 let! resp = getAsync url
          
